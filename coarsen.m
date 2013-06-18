@@ -38,8 +38,8 @@ function imgdata=coarsen(id,varargin)
     nmperpixel = cell2mat(optargs(1));
     target = cell2mat(optargs(2));
     
-    ats=target/nmperpixel;
-    
+    ats=nmperpixel/target;
+    ats
     for i=1:length(flcells)
         flcells{i}=accu(flcells{i},ats);
     end
@@ -58,16 +58,17 @@ function C=accu(img,factor)
     
     for i=1:w
         for n=1:h
+            %i/factor
             m=m+1;
-            subs{m}=[round(i/factor)+1; round(n/factor)+1];
+            subs{m}=[round(i*factor)+1; round(n*factor)+1];
         end
     end
     
     subs=cell2mat(subs);
     
     subs=subs';
-
-    
+    %subs
+    w,h
     
     bl=[];
     for i=1:w

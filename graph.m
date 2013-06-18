@@ -8,10 +8,10 @@ function graph(imgdata)
 %         axis equal;
         imgdata{1}=ovlay(imgdata{1},imgdata{6},imgdata{3},imgdata{2});
     end
-%     figure(1000);
-%     imagesc(imgdata{1})
-    figure(3000)
-    imshow(mat2gray(imgdata{1}))
+     figure(1000);
+     imagesc(imgdata{1})
+%     figure(3000)
+%     imshow(mat2gray(imgdata{1}))
     axis equal;
 end
 

@@ -45,7 +45,7 @@ else
     imgsize=l*numofcells;
 end
 if numofcells==1
-    imgsize=imgsize*1.3;
+    imgsize=round(imgsize*1.3);
 end
 sizeofmol=sizeofmol/nmperpixel; 
 
@@ -71,10 +71,6 @@ imgdata=drawEcoli(k,numofcells,h,l,steps,'no');
 %                   3)origins of the cells
 %                   4)dimensions of the cell (in a cell type: len, height)
 %                   5)the cells
-toc
-tic
-figure(4000)
-imagesc(imgdata{1})
 toc
 if length(imgdata)>1
     tic
@@ -107,7 +103,7 @@ if length(imgdata)>1
     %                      6)The fluorescence channel (in a cell type)
     toc
     tic
-    imgdata=coarsen(imgdata,1);
+    imgdata=coarsen(imgdata,nmperpixel,.1);
     toc
     tic
     graph(imgdata)
