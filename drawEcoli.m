@@ -44,6 +44,12 @@ function imgdata=drawEcoli (img,varargin)
     
     % Fixes or randomizes the locations of the cells
     
+    if len<height
+        tmp=height;
+        height=len;
+        len=tmp;
+    end
+    
     if strcmp(fix, 'no')== 1
         n=[0 0];
         while n(1)<num
@@ -65,14 +71,15 @@ function imgdata=drawEcoli (img,varargin)
             end
         end
     else % Linearly spaces the cells on a diagnol in predicable places
-        l=linspace(height,imsize-height,num+num/5+3);
-        l2=linspace(imsize-height,height,num+num/5+3);
+        f=num/5+3;
+        l=linspace(height,imsize-height,num+f);
+        l2=linspace(imsize-height,height,num+f);
         randpair=[l2;l];
         randpair=randpair';
-        ang(1:uint16(num+num/5+3))=120;
+        ang(1:uint16(num+f))=30;
         n=[0 0]; 
         i=0;
-        while n(1)<num && i<floor(num+num/5+3)
+        while n(1)<num && i<floor(num+f)
             i=i+1;
             q={randpair(i,:), ang(i)};
             imgls=draw(img,q,len,height,steps);
@@ -91,11 +98,15 @@ function imgdata=drawEcoli (img,varargin)
         end
 
     end
-%     imagesc(img);
-    if i>=floor(num+num/5+3)
-        'could not draw'
-        imgdata=false;
-    else
+    %imagesc(img);
+    imgdata=true;
+    if strcmp(fix, 'no')== 0
+        if i>=floor(num+f)
+            'could not draw'
+            imgdata=false;
+        end
+    end
+    if imgdata~=false
         %Create individual cells in a cell list
         dim={len,height};
         u(len,height)=0;

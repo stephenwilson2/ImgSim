@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=10;
+nmperpixel=1;
 
 %Define the height and length of the cells here in nanometers
 h=500; %nm
@@ -44,7 +44,9 @@ if h>l
 else
     imgsize=l*numofcells;
 end
-
+if numofcells==1
+    imgsize=imgsize*1.3;
+end
 sizeofmol=sizeofmol/nmperpixel; 
 
 k(imgsize,imgsize) = 0;
@@ -52,8 +54,8 @@ k(imgsize,imgsize) = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-imgdata=drawEcoli(k,numofcells,h,l,steps,'fix');
+tic
+imgdata=drawEcoli(k,numofcells,h,l,steps,'no');
 % %drawEcoli inputs:1)16-bit image matrix
 %                   2)number of cells to try and put in*
 %                   3)height of cell (in px)*
@@ -69,10 +71,15 @@ imgdata=drawEcoli(k,numofcells,h,l,steps,'fix');
 %                   3)origins of the cells
 %                   4)dimensions of the cell (in a cell type: len, height)
 %                   5)the cells
+toc
+tic
 figure(4000)
 imagesc(imgdata{1})
+toc
 if length(imgdata)>1
+    tic
     imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+    toc
     %% Populates cells with molecules of some shape
     %populateMolecules inputs:  1)imagedata
     %                           2)copies of molecules*
@@ -84,7 +91,7 @@ if length(imgdata)>1
     %                           3)origins of the cells
     %                           4)dimensions of the cell (in a cell type: len, height)
     %                           5)the molecules channel (in a cell type)
-    
+    tic
     imgdata=fluorescence(imgdata,fluorvar,spread);
     %% Draws fluorescence in cells
     %fluorescence inputs:  1)16-bit image matrix
@@ -98,7 +105,11 @@ if length(imgdata)>1
     %                      4)dimensions of the cell (in a cell type: len, height)
     %                      5)the molecules channel (in a cell type)
     %                      6)The fluorescence channel (in a cell type)
-    
+    toc
+    tic
     imgdata=coarsen(imgdata,1);
+    toc
+    tic
     graph(imgdata)
+    toc
 end
