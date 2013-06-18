@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=10;
+nmperpixel=20;
 
 %Define the height and length of the cells here in nanometers
 h=500; %nm
@@ -18,17 +18,30 @@ sizeofmol=10000; % This number is represnetative of the nm of molecule
 % per molecule
 
 %Fluorescene Variables
-emwave=521*10^-2; %nm
+emwave=520; %nm
 n=1.515; %refractive index for immersion oil
 NA=1.4; %numerical apperature
 a=asin(NA/n);
 k=(2*pi/emwave);
+
 num=4-7*power(cos(a),3/2)+3*power(cos(a),7/2);
 de=7*(1-power(cos(a),3/2));
 fluorvar=1/n/k*power(num/de,-0.5);
+fluorvar
 %fluorvar FIX!!!! it doesn't really work...
 spread=[h h];
 %fluorobindint=1;
+s=fluorvar;
+m=0;
+x=linspace(-1000,1000);
+
+f = gaussDistribution(x, m, s);
+f=f/3.5;
+ plot(x,f,'.')
+ grid on
+title('Bell Curve')
+ xlabel('um')
+ ylabel('Gauss Distribution')  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
@@ -105,10 +118,10 @@ if length(imgdata)>1
     tic
     graph(imgdata,4)
     toc
-    tic
-    imgdata=coarsen(imgdata,nmperpixel,5);
-    toc
-    tic
-    graph(imgdata,5)
-    toc
+%     tic
+%     imgdata=coarsen(imgdata,nmperpixel,64);
+%     toc
+%     tic
+%     graph(imgdata,5)
+%     toc
 end

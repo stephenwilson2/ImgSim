@@ -30,10 +30,10 @@ for i=1:wp
     end
 end
 y=cell2mat(x);
-y
+%y
 y=y(1:w,1:h);
-val
-y
+%val
+%y
 v1 = reshape(val,numel(val),1);
 s1 = reshape(y,numel(y),1);
 

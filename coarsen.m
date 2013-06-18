@@ -38,7 +38,7 @@ function imgdata=coarsen(id,varargin)
     nmperpixel = cell2mat(optargs(1));
     target = cell2mat(optargs(2));
     
-    ats=target;
+    ats=target/nmperpixel;
     for i=1:length(flcells)
         flcells{i}=accu(flcells{i},ats);
     end
