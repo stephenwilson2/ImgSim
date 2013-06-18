@@ -72,7 +72,7 @@ function imgdata=drawEcoli (img,varargin)
         ang(1:uint16(num+num/5+3))=120;
         n=[0 0]; 
         i=0;
-        while n(1)<num && i<num
+        while n(1)<num && i<floor(num+num/5+3)
             i=i+1;
             q={randpair(i,:), ang(i)};
             imgls=draw(img,q,len,height,steps);
@@ -92,7 +92,7 @@ function imgdata=drawEcoli (img,varargin)
 
     end
 %     imagesc(img);
-    if i>=num
+    if i>=floor(num+num/5+3)
         'could not draw'
         imgdata=false;
     else
@@ -131,9 +131,9 @@ function imgls=draw(img,num,l,h,s)
     if img==0
         redo=1;
         img=bi;
+    else
+        img=imfill(img,'holes');
     end
-    
-    img=imfill(img,'holes');
     imgls={img,redo};
 end
 
@@ -154,6 +154,7 @@ function img=checkShape(img, pts)
             n=n+1;
         end
     end
+    
     if n==0
         A = uint16(zeros(imsize,imsize));
         for pair = pts'
@@ -161,14 +162,16 @@ function img=checkShape(img, pts)
                 A(pair(1),pair(2)) = 1;
             end
         end
-        img(A==1) = 1;
-        %imagesc(A);
         b = img(A==1);
         s= sum(b);
         if s>0
-            'horrifying';
+            'There is overlap!';
         end
+        
+        img(A==1) = 1;
+
     end
+    
     if n>0 || s>0
         img=0;
     end

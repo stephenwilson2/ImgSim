@@ -5,7 +5,7 @@ ip = 'C:/Users/sw5/ImgSim'; % make less specific later
 addpath(ip);
 
 % Default values
-numofcells=1;
+numofcells=2;
 nmperpixel=10;
 
 %Define the height and length of the cells here in nanometers
@@ -69,9 +69,8 @@ imgdata=drawEcoli(k,numofcells,h,l,steps,'fix');
 %                   3)origins of the cells
 %                   4)dimensions of the cell (in a cell type: len, height)
 %                   5)the cells
-figure(4000)
-imagesc(imgdata{1})
 if length(imgdata)>1
+
     imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
     %% Populates cells with molecules of some shape
     %populateMolecules inputs:  1)imagedata
@@ -99,6 +98,6 @@ if length(imgdata)>1
     %                      5)the molecules channel (in a cell type)
     %                      6)The fluorescence channel (in a cell type)
     
-    imgdata=coarsen(imgdata,1);
+    imgdata=coarsen(imgdata,2);
     graph(imgdata)
 end
