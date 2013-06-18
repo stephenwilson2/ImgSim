@@ -38,42 +38,69 @@ function imgdata=coarsen(id,varargin)
     nmperpixel = cell2mat(optargs(1));
     target = cell2mat(optargs(2));
     
-    ats=nmperpixel/target;
-    ats
+    ats=target;
     for i=1:length(flcells)
         flcells{i}=accu(flcells{i},ats);
     end
-        
+    for i=1:length(cells)
+        cells{i}=accu(cells{i},ats);
+    end
+    figure(1)
+    subplot(1,2,1)
+    imagesc(img);
+    img=accu(img,ats);
+    subplot(1,2,2)
+    imagesc(img);
+    for m=1:length(angles)
+        ori(m,:)=ori(m,:)/ats;
+    end
     imgdata={img,angles,ori,dim,cells,flcells};
 end
 
 
-function C=accu(img,factor)
-    subs={};
+function final=accu(img,factor)
     s=size(img);
     w=s(1);
     h=s(2);
-    m=0;
+    if w>factor
+        wp=ceil(w/factor);
+    else
+        'too big a factor for w'
+    end
+    if h>factor
+        hp=ceil(h/factor);
+    else
+        'too big a factor for h'
+    end
+    y=zeros(factor,factor);
+    x{wp,hp}=[];
+    n=0;
+    for i=1:wp
+        for j=1:hp
+            n=n+1;
+            y(:,:)=n;
+            x{i,j}=y;
+        end
+    end
+    y=cell2mat(x);
+    y
+    y=y(1:w,1:h);
+    img
+    y
+    v1 = reshape(img,numel(img),1);
+    s1 = reshape(y,numel(y),1);
     
-    
-    for i=1:w
-        for n=1:h
-            %i/factor
-            m=m+1;
-            subs{m}=[round(i*factor)+1; round(n*factor)+1];
+    C=accumarray(s1,v1,[max(s1) 1],@mean);
+    f{wp,hp}=[];
+    n=0;
+    for i=1:wp
+        for j=1:hp
+            n=n+1;
+            f{i,j}=C(n);
         end
     end
     
-    subs=cell2mat(subs);
-    
-    subs=subs';
-    %subs
-    w,h
-    
-    bl=[];
-    for i=1:w
-        bl=[bl img(i,:)];
-    end
+    final=cell2mat(f);
+    final
 
-    C=accumarray(subs,bl,[],@mean);
 end

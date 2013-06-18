@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=1;
+nmperpixel=10;
 
 %Define the height and length of the cells here in nanometers
 h=500; %nm
@@ -103,9 +103,12 @@ if length(imgdata)>1
     %                      6)The fluorescence channel (in a cell type)
     toc
     tic
-    imgdata=coarsen(imgdata,nmperpixel,.1);
+    graph(imgdata,4)
     toc
     tic
-    graph(imgdata)
+    imgdata=coarsen(imgdata,nmperpixel,5);
+    toc
+    tic
+    graph(imgdata,5)
     toc
 end

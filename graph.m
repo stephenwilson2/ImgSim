@@ -1,4 +1,4 @@
-function graph(imgdata)
+function graph(imgdata,n)
 %% Graphs the imgdata's cells, fluorescence, and molecules
     for i=1:length(imgdata{5})
 %         figure(i);
@@ -8,10 +8,10 @@ function graph(imgdata)
 %         axis equal;
         imgdata{1}=ovlay(imgdata{1},imgdata{6},imgdata{3},imgdata{2});
     end
-     figure(1000);
+     figure(n);
      imagesc(imgdata{1})
-%     figure(3000)
-%     imshow(mat2gray(imgdata{1}))
+     figure(n*100)
+     imshow(mat2gray(imgdata{1}))
     axis equal;
 end
 
