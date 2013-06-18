@@ -1,0 +1,103 @@
+function imgdata=populateMolecules(imgdata,varargin)
+%% Populates cells with molecules of some shape
+%populateMolecules inputs:  1)imagedata
+%                           2)copies of molecules*
+%                           3)size of molecules*
+%                           4)type (EVENTUALLY!)*
+%                           * denotes optional input
+%                  output: 
+%                           1)the cell mask, 16-bit image matrix
+%                           2)angles of the cells
+%                           3)origins of the cells
+%                           4)dimensions of the cell (in a cell type: len, height)
+%                           5)the molecules channel (in a cell type): 1000=rna
+
+    %Extract data about image
+    img=imgdata{1};
+    angles=imgdata{2};
+    ori=imgdata{3};
+    dim=imgdata{4};
+        len=dim{1};
+        height=dim{2};
+    cells=imgdata{5};
+        
+    %Default values
+    num = 5; % copies of molecules
+    size=100;
+
+    
+    % Sets defaults for optional inputs
+    optargs = {num,size};
+    
+    % Checks to ensure  3 optional inputs at most
+    numvarargs = length(varargin);
+    if numvarargs > 2
+        error('Takes at most 2 optional inputs');
+    end
+    
+    % Overwrites defaults if optional input exists
+    optargs(1:numvarargs) = varargin;
+    num = cell2mat(optargs(1));
+    size = cell2mat(optargs(2));
+
+    for i=1:length(cells)
+        for n=1:num
+            x=randi([1 (len-1)]);
+            y=randi([1 (height-1)]);
+            cell=cells{i};
+            while cell(x,y)==0
+                x=randi([1 (len-1)]);
+                y=randi([1 (height-1)]);
+            end
+            xy=[x,y];
+            rna=rnaodna(xy,len,height,size,cells{i});
+            cells{i}(rna>0)=rna(rna>0);
+        end
+    end
+    imgdata={img,angles,ori,dim,cells};
+end
+function pts=rnaodna(ori,len,height,size,cell)
+    u(1:len,1:height)=0;
+    for i=1:size
+        while cell(ori(1),ori(2))==0 && ori(2)>height/2
+            ori(2)=ori(2)-1;
+        end
+        while cell(ori(1),ori(2))==0 && ori(2)<height/2
+            ori(2)=ori(2)+1;
+        end
+        if  ori(1)==1
+            ori(1)=ori(1)+1;
+        elseif ori(2)==1
+            ori(2)=ori(2)+1;
+
+        elseif ori(2)==height-1
+            ori(2)=ori(2)-1;
+        elseif ori(1)==len-1
+            ori(1)=ori(1)-1;
+        end
+        
+        x=randi([1 4]);
+        if  x==1 
+            ori(1)=ori(1)+1;
+        elseif x==2
+            ori(2)=ori(2)+1;
+
+        elseif x==3 
+            ori(2)=ori(2)-1;
+        elseif x==4
+            ori(1)=ori(1)-1;
+
+        elseif ori(1)==1
+            ori(1)=ori(1)+1;
+        elseif ori(2)==1
+            ori(2)=ori(2)+1;
+
+        elseif ori(2)==len
+            ori(2)=ori(2)-1;
+        elseif ori(1)==height
+            ori(1)=ori(1)-1;     
+        end
+        u(ori(1),ori(2))=u(ori(1),ori(2))+10;
+    end
+    pts=u;
+end 
