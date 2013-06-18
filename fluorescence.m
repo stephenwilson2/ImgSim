@@ -2,7 +2,7 @@ function imgdata=fluorescence(imgdata,varargin)
 %% Draws fluorescence in cells
 %fluorescence inputs:  1)16-bit image matrix
 %                      2)size of varience (in Gaussian varience)*
-%                      3)matric of the spread of the gaussian filter (make
+%                      3)matrix of the spread of the gaussian filter (make
 %                      big enough to encompass the fluorescence)
 %                      * denotes optional input
 %             output: 
@@ -19,7 +19,7 @@ function imgdata=fluorescence(imgdata,varargin)
     ori=imgdata{3};
     dim=imgdata{4};
     cells=imgdata{5};
-    
+     
     %Default values
     sof=.1; % size of fluorescence (in terms of gaussian varience)
     ms=[10 10]; %matrix of the spread of the gaussian filter
@@ -42,21 +42,17 @@ function imgdata=fluorescence(imgdata,varargin)
     
     fc{length(cells)}=0;
     for i=1:length(cells)
-        fc{i}=fluoro(cells{i}>0,cells{i},dim,sof,ms);
-%         tic
-%         fc{i}=fc{i}(fc{i}>0)*bi;
-%         toc
+        fc{i}=fluoro(cells{i}>0,cells{i},dim);
+        fc{i}=psf(fc{i},sof);
     end
     
     imgdata={img,angles,ori,dim,cells,fc};
 end 
- function fl2=fluoro(pts,cell,dm,var,ms)
+ function fl2=fluoro(pts,cell,dm)
     l=dm{1};
     h=dm{2};
-    fl(l,h)=0;
-    fl(pts==1)=cell(pts==1);
-    f=fspecial('gaussian',ms,var);
-    fl2=imfilter(fl,f);
+    fl2(l,h)=0;
+    fl2(pts==1)=cell(pts==1);
  end
     
 

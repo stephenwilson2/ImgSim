@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=10;
+nmperpixel=20;
 
 %Define the height and length of the cells here in nanometers
 h=500; %nm
@@ -18,17 +18,29 @@ sizeofmol=10000; % This number is represnetative of the nm of molecule
 % per molecule
 
 %Fluorescene Variables
-emwave=521*10^-2; %nm
+emwave=0.520; %nm
 n=1.515; %refractive index for immersion oil
-NA=1.4; %numerical apperature
+NA=1; %numerical apperature
 a=asin(NA/n);
 k=(2*pi/emwave);
 num=4-7*power(cos(a),3/2)+3*power(cos(a),7/2);
 de=7*(1-power(cos(a),3/2));
 fluorvar=1/n/k*power(num/de,-0.5);
+fluorvar
 %fluorvar FIX!!!! it doesn't really work...
 spread=[h h];
 %fluorobindint=1;
+s=fluorvar;
+m=0;
+x=linspace(-1,1);
+
+f = gaussDistribution(x, m, s);
+f=f/3.5;
+ plot(x,f,'.')
+ grid on
+title('Bell Curve')
+ xlabel('um')
+ ylabel('Gauss Distribution')  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
@@ -45,7 +57,7 @@ else
     imgsize=l*numofcells;
 end
 if numofcells==1
-    imgsize=imgsize*1.3;
+    imgsize=round(imgsize*1.3);
 end
 sizeofmol=sizeofmol/nmperpixel; 
 
@@ -71,10 +83,6 @@ imgdata=drawEcoli(k,numofcells,h,l,steps,'no');
 %                   3)origins of the cells
 %                   4)dimensions of the cell (in a cell type: len, height)
 %                   5)the cells
-toc
-tic
-figure(4000)
-imagesc(imgdata{1})
 toc
 if length(imgdata)>1
     tic
@@ -107,9 +115,12 @@ if length(imgdata)>1
     %                      6)The fluorescence channel (in a cell type)
     toc
     tic
-    imgdata=coarsen(imgdata,3);
+    graph(imgdata,4)
     toc
-    tic
-    graph(imgdata)
-    toc
+%     tic
+%     imgdata=coarsen(imgdata,nmperpixel,64);
+%     toc
+%     tic
+%     graph(imgdata,5)
+%     toc
 end

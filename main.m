@@ -31,17 +31,17 @@ fluorvar
 %fluorvar FIX!!!! it doesn't really work...
 spread=[h h];
 %fluorobindint=1;
-s=fluorvar;
-m=0;
-x=linspace(-1000,1000);
-
-f = gaussDistribution(x, m, s);
-f=f/3.5;
- plot(x,f,'.')
- grid on
-title('Bell Curve')
- xlabel('um')
- ylabel('Gauss Distribution')  
+% s=fluorvar;
+% m=0;
+% x=linspace(-1000,1000);
+% 
+% f = gaussDistribution(x, m, s);
+% f=f/3.5;
+%  plot(x,f,'.')
+%  grid on
+% title('Bell Curve')
+%  xlabel('um')
+%  ylabel('Gauss Distribution')  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
