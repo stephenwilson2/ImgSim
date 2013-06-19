@@ -13,7 +13,7 @@ h=500; %nm
 l=2000; %nm
 
 %The number of molecules to measure
-numofmol=1;
+numofmol=5;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -27,33 +27,15 @@ k=(2*pi/emwave);
 num=4-7*power(cos(a),3/2)+3*power(cos(a),7/2);
 de=7*(1-power(cos(a),3/2));
 fluorvar=1/n/k*power(num/de,-0.5);
-fluorvar
-%fluorvar FIX!!!! it doesn't really work...
-if h>l
-    spread=[h h];
-else
-    spread=[l l];
-end
 
-%fluorobindint=1;
-% s=fluorvar;
-% m=0;
-% x=linspace(-1000,1000);
-% 
-% f = gaussDistribution(x, m, s);
-% f=f/3.5;
-%  plot(x,f,'.')
-%  grid on
-% title('Bell Curve')
-%  xlabel('um')
-%  ylabel('Gauss Distribution')  
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
-h=h*2;
-l=l*2;
-h=round(h/nmperpixel);
-l=round(l/nmperpixel);
+% h=h*2;
+% l=l*2;
+% h=round(h/nmperpixel);
+% l=round(l/nmperpixel);
 steps=l*nmperpixel*10; %Calculated of nmperpixel and cell size
 
 %Sets the image size according to the number of cells and the cell size
@@ -89,9 +71,7 @@ imgdata=drawEcoli(k,numofcells,h,l,steps,'no');
 %                   5)the cells
 toc
 if length(imgdata)>1
-    tic
     imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
-    toc
     %% Populates cells with molecules of some shape
     %populateMolecules inputs:  1)imagedata
     %                           2)copies of molecules*
@@ -104,29 +84,26 @@ if length(imgdata)>1
     %                           4)dimensions of the cell (in a cell type: len, height)
     %                           5)the molecules channel (in a cell type)
     tic
-    
-    imgdata=fluorescence(imgdata);
-    %% Draws fluorescence in cells
-    %fluorescence inputs:  1)16-bit image matrix
-    %                      2)size of varience (in Gaussian varience)* %%%%%%FIX
-    %                      to scale
-    %                      * denotes optional input
-    %             output:
-    %                      1)the cell mask, 16-bit image matrix
-    %                      2)angles of the cells
-    %                      3)origins of the cells
-    %                      4)dimensions of the cell (in a cell type: len, height)
-    %                      5)the molecules channel (in a cell type)
-    %                      6)The fluorescence channel (in a cell type)
+    imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
     toc
+    
+    
     tic
-
-    graph(imgdata,4,fluorvar,spread)
+    imgdata{6}=psf(imgdata{6},fluorvar);
+    toc
+   
+%     tic
+%     imgdata=ovlay(imgdata,imgdata{5});
 %     toc
+    
+    tic
+    graph(imgdata)
+    toc
+    
 %     tic
 %     imgdata=coarsen(imgdata,nmperpixel,64);
 %     toc
 %     tic
-%     graph(imgdata,5)
+%     graph(imgdata)
 %     toc
 end

@@ -10,7 +10,7 @@ function imgdata=populateMolecules(imgdata,varargin)
 %                           2)angles of the cells
 %                           3)origins of the cells
 %                           4)dimensions of the cell (in a cell type: len, height)
-%                           5)the molecules channel (in a cell type): 1000=rna
+%                           5)the molecules channel (in a cell type)
 
     %Extract data about image
     img=imgdata{1};
@@ -23,11 +23,11 @@ function imgdata=populateMolecules(imgdata,varargin)
         
     %Default values
     num = 5; % copies of molecules
-    size=100;
+    sz=100;
 
     
     % Sets defaults for optional inputs
-    optargs = {num,size};
+    optargs = {num,sz};
     
     % Checks to ensure  3 optional inputs at most
     numvarargs = length(varargin);
@@ -38,7 +38,7 @@ function imgdata=populateMolecules(imgdata,varargin)
     % Overwrites defaults if optional input exists
     optargs(1:numvarargs) = varargin;
     num = cell2mat(optargs(1));
-    size = cell2mat(optargs(2));
+    sz = cell2mat(optargs(2));
 
     for i=1:length(cells)
         for n=1:num
@@ -50,10 +50,14 @@ function imgdata=populateMolecules(imgdata,varargin)
                 y=randi([1 (height-1)]);
             end
             xy=[x,y];
-            rna=rnaodna(xy,len,height,size,cells{i});
+            rna=rnaodna(xy,len,height,sz,cells{i});
             cells{i}(rna>0)=rna(rna>0);
         end
+        tmp=zeros(size(cells{i}));
+        tmp(cells{i}>1)=cells{i}(cells{i}>1)*2;
+        cells{i}=tmp;
     end
+    
     imgdata={img,angles,ori,dim,cells};
 end
 function pts=rnaodna(ori,len,height,size,cell)
