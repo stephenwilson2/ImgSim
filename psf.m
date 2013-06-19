@@ -1,5 +1,5 @@
 function img2=psf(img,varargin)
-%% Draws fluorescence in cells
+%% Applies psf in cells
 %fluorescence inputs:  1)image matrix
 %                      2)size of varience (in Gaussian varience)*
 %                      3)matrix of the spread of the gaussian filter (make
@@ -9,11 +9,10 @@ function img2=psf(img,varargin)
 %                      1)spread image matrix
     %Default values
     s=.1; % size of fluorescence (in terms of gaussian varience)
-    ms=[10 10]; %matrix of the spread of the gaussian filter
-    bi=1;
+    ms=[1000 1000]; %matrix of the spread of the gaussian filter
     
     % Sets defaults for optional inputs
-    optargs = {s,ms,bi};
+    optargs = {s,ms};
     
     % Checks to ensure  3 optional inputs at most
     numvarargs = length(varargin);
@@ -25,8 +24,8 @@ function img2=psf(img,varargin)
     optargs(1:numvarargs) = varargin;
     s = cell2mat(optargs(1));
     ms = cell2mat(optargs(2));
-    bi = cell2mat(optargs(3));
-    
+    sum(sum(img>1))
+
     f=fspecial('gaussian',ms,s);
     img2=imfilter(img,f);
 end

@@ -6,15 +6,15 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=20;
+nmperpixel=1;
 
 %Define the height and length of the cells here in nanometers
 h=500; %nm
 l=2000; %nm
 
 %The number of molecules to measure
-numofmol=5;
-sizeofmol=10000; % This number is represnetative of the nm of molecule 
+numofmol=1;
+sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
 %Fluorescene Variables
@@ -29,7 +29,12 @@ de=7*(1-power(cos(a),3/2));
 fluorvar=1/n/k*power(num/de,-0.5);
 fluorvar
 %fluorvar FIX!!!! it doesn't really work...
-spread=[h h];
+if h>l
+    spread=[h h];
+else
+    spread=[l l];
+end
+
 %fluorobindint=1;
 % s=fluorvar;
 % m=0;
@@ -60,10 +65,8 @@ end
 if numofcells==1
     imgsize=round(imgsize*1.3);
 end
-sizeofmol=sizeofmol/nmperpixel; 
 
 k(imgsize,imgsize) = 0;
-%k= uint64(k);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -101,7 +104,8 @@ if length(imgdata)>1
     %                           4)dimensions of the cell (in a cell type: len, height)
     %                           5)the molecules channel (in a cell type)
     tic
-    imgdata=fluorescence(imgdata,fluorvar,spread);
+    
+    imgdata=fluorescence(imgdata);
     %% Draws fluorescence in cells
     %fluorescence inputs:  1)16-bit image matrix
     %                      2)size of varience (in Gaussian varience)* %%%%%%FIX
@@ -116,8 +120,9 @@ if length(imgdata)>1
     %                      6)The fluorescence channel (in a cell type)
     toc
     tic
-    graph(imgdata,4)
-    toc
+
+    graph(imgdata,4,fluorvar,spread)
+%     toc
 %     tic
 %     imgdata=coarsen(imgdata,nmperpixel,64);
 %     toc

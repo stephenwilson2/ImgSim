@@ -97,7 +97,7 @@ function pts=rnaodna(ori,len,height,size,cell)
         elseif ori(1)==height
             ori(1)=ori(1)-1;     
         end
-        u(ori(1),ori(2))=u(ori(1),ori(2))+10;
+        u(ori(1),ori(2))=u(ori(1),ori(2))+100;
     end
     pts=u;
 end 

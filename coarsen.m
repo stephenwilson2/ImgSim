@@ -75,6 +75,12 @@ function final=accu(img,factor)
     y=zeros(factor,factor);
     x{wp,hp}=[];
     n=0;
+    while wp*floor(factor)<w
+        wp=wp+1;
+    end
+    while hp*floor(factor)<h
+        hp=hp+1;
+    end
     for i=1:wp
         for j=1:hp
             n=n+1;

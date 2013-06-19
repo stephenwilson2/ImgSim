@@ -20,30 +20,33 @@ function imgdata=fluorescence(imgdata,varargin)
     dim=imgdata{4};
     cells=imgdata{5};
      
-    %Default values
-    sof=.1; % size of fluorescence (in terms of gaussian varience)
-    ms=[10 10]; %matrix of the spread of the gaussian filter
-    bi=1;
-    
-    % Sets defaults for optional inputs
-    optargs = {sof,ms,bi};
-    
-    % Checks to ensure  3 optional inputs at most
-    numvarargs = length(varargin);
-    if numvarargs > 3
-        error('Takes at most 3 optional inputs');
-    end
-    
-    % Overwrites defaults if optional input exists
-    optargs(1:numvarargs) = varargin;
-    sof = cell2mat(optargs(1));
-    ms = cell2mat(optargs(2));
-    bi = cell2mat(optargs(3));
+%     %Default values
+%     sof=.1; % size of fluorescence (in terms of gaussian varience)
+%     ms=[1000 1000]; %matrix of the spread of the gaussian filter
+%     bi=1;
+%     
+%     % Sets defaults for optional inputs
+%     optargs = {sof,ms,bi};
+%     
+%     % Checks to ensure  3 optional inputs at most
+%     numvarargs = length(varargin);
+%     if numvarargs > 3
+%         error('Takes at most 3 optional inputs');
+%     end
+%     
+%     % Overwrites defaults if optional input exists
+%     optargs(1:numvarargs) = varargin;
+%     sof = cell2mat(optargs(1));
+%     ms = cell2mat(optargs(2));
+%     bi = cell2mat(optargs(3));
     
     fc{length(cells)}=0;
+    
     for i=1:length(cells)
         fc{i}=fluoro(cells{i}>0,cells{i},dim);
-        fc{i}=psf(fc{i},sof);
+        tmp=zeros(size(cells{i}));
+        tmp(fc{i}>1)=fc{i}(fc{i}>1)*2;
+        fc{i}=tmp;
     end
     
     imgdata={img,angles,ori,dim,cells,fc};
@@ -52,7 +55,8 @@ end
     l=dm{1};
     h=dm{2};
     fl2(l,h)=0;
-    fl2(pts==1)=cell(pts==1);
+    fl2(pts)=cell(pts);
+    sum(sum(cell>1))
  end
     
 
