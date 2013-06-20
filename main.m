@@ -16,8 +16,8 @@ r=r/nmperpixel;
 l=l/nmperpixel;
 
 %The number of molecules to measure
-numofmol=5;
-sizeofmol=10; % This number is represnetative of the nm of molecule 
+numofmol=1;
+sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
 %Fluorescene Variables
