@@ -1,4 +1,4 @@
-function img2=psf(img,varargin)
+function imgdata=psf(imgdata,varargin)
 %% Applies psf in cells
 %fluorescence inputs:  1)image matrix
 %                      2)size of varience (in Gaussian varience)*
@@ -9,30 +9,31 @@ function img2=psf(img,varargin)
 %                      1)image matrix
     %Default values
     s=.1; % size of fluorescence (in terms of gaussian varience)
-    
-    %matrix of the gaussian filter's kernal
-    h=size(img,1);
-    l=size(img,2);
-    if h>l  
-        ms=[h h];
-    else
-        ms=[l l];
-    end 
+    img=imgdata{1};
     
     % Sets defaults for optional inputs
-    optargs = {s,ms};
+    optargs = {s};
     
     % Checks to ensure  2 optional inputs at most
     numvarargs = length(varargin);
-    if numvarargs > 2
-        error('Takes at most 2 optional inputs');
+    if numvarargs > 1
+        error('Takes at most 1 optional inputs');
     end
     
     % Overwrites defaults if optional input exists
     optargs(1:numvarargs) = varargin;
     s = cell2mat(optargs(1));
-    ms = cell2mat(optargs(2));
 
-    f=fspecial('gaussian',ms,s);
-    img2=imfilter(img,f);
+    
+    for i=1:length(img)
+    %matrix of the gaussian filter's kernal
+        h=size(img{i},1);
+        l=size(img{i},2);
+        ms=[h,l];
+        p=img{i};
+        f=fspecial('gaussian',ms,s);
+        img2=imfilter(full(p),f);
+        img{i}=sparse(img2);
+    end
+    imgdata{1}=img;
 end

@@ -9,8 +9,8 @@ numofcells=1;
 nmperpixel=10;
 
 %Define the height and length of the cells here in nanometers
-r=5; %nm
-l=20; %nm
+r=25; %nm
+l=100; %nm
 
 
 %The number of molecules to measure
@@ -34,7 +34,7 @@ fluorvar=1/n/k*power(num/de,-0.5);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
 
-steps=l*nmperpixel*10; %Calculated of nmperpixel and cell size
+steps=l*10; %Calculated of nmperpixel and cell size
 
 %Sets the image size according to the number of cells and the cell size
 if r>l
@@ -42,59 +42,45 @@ if r>l
 else
     imgsize=2*l*numofcells;
 end
-if numofcells==1
-    imgsize=round(imgsize*1.3);
-end
+% if numofcells==1
+%     imgsize=round(imgsize*1.3);
+% end
 k={};
-for i=1:imgsize
-    k{i}=sparse(imgsize,imgsize);
+for i=1:r*2+1
+    k{i}=sparse(imgsize,r*2+1);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tic
 imgdata=drawEcoli(k,numofcells,r,l,steps,'no');
-%  drawEcoli inputs:1)16-bit image matrix
-%                   2)number of cells to try and put in*
-%                   3)height of cell (in px)*
-%                   4)length of cell (in px)*
-%                   5)number of points in shape (keep high ~200 for small 
-%                     cells and ~2000 for large cells)*
-%                   6)use random origins keep blank or fix the origins:
-%                     'fix'*
-%                   * denotes optional input
-%          output: 
-%                   1)the cell mask, 16-bit image matrix
-%                   2)angles of the cells
-%                   3)origins of the cells
-%                   4)dimensions of the cell (in a cell type: len, height)
-%                   5)the cells
 toc
-% if length(imgdata)>1
-%     imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
-%     %% Populates cells with molecules of some shape
-%     %populateMolecules inputs:  1)imagedata
-%     %                           2)copies of molecules*
-%     %                           3)size of molecules*
-%     %                           * denotes optional input
-%     %                  output:
-%     %                           1)the cell mask, 16-bit image matrix
-%     %                           2)angles of the cells
-%     %                           3)origins of the cells
-%     %                           4)dimensions of the cell (in a cell type: len, height)
-%     %                           5)the molecules channel (in a cell type)
-%     tic
-%     imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
-%     toc
-%     
-%     
-%     tic
-%     imgdata{6}=psf(imgdata{6},fluorvar);
-%     toc
+
+img=imgdata{1};
+for p=1:length(img)
+    figure(p);imagesc(img{p});
+end
+
+tic
+imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+toc
+
+img=imgdata{1};
+for p=1:length(img)
+    figure(p*10);imagesc(img{p});
+end
+
+tic
+imgdata=psf(imgdata,fluorvar);
+toc
+
+img=imgdata{1};
+for p=1:length(img)
+    figure(p*100);imagesc(img{i});
+end
+
+
 %    
-%     tic
-%     imgdata{6}=imgdata{6}+imgdata{1};
-%     toc
 %     
 %     tic
 %     graph(imgdata)

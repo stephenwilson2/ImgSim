@@ -1,20 +1,6 @@
 function imgdata=drawEcoli (img,varargin)
 %% Draws shapes that represent cells
-% %drawEcoli inputs:1)16-bit image matrix
-%                   2)number of cells to try and put in*
-%                   3)height of cell*
-%                   4)length of cell*
-%                   5)number of points in shape (keep high ~200 for small 
-%                     cells and ~2000 for large cells)*
-%                   6)use random origins keep blank or fix the origins:
-%                     'fix'*
-%                   * denotes optional input
-%          output: 
-%                   1)the cell mask, 16-bit image matrix
-%                   2)angles of the cells
-%                   3)origins of the cells
-%                   4)dimensions of the cell (in a cell type: len, height)
-%                   5)the cells
+
 
     %Default values
     num = 5;
@@ -48,55 +34,56 @@ function imgdata=drawEcoli (img,varargin)
         r=l;
         l=tmp;
     end
-    
-    if strcmp(fix, 'no')== 1
-        n=[0 0];
-        while n(1)<num
-            randpair=randi([r imsize-r],1,2); %gets a random origin for a cell
-            ang = random('normal',180,90,1,1);
-            q={randpair, ang};
+%     
+%     if strcmp(fix, 'no')== 1
+%         n=[0 0];
+%         while n(1)<num
+%             randpair=randi([r imsize-r],1,2); %gets a random origin for a cell
+%             ang = random('normal',180,90,1,1);
+%             q={randpair, ang};
+            q={}; %remove before uncommenting
             imgls=draw(img,q,l,r,steps);
             img=imgls{1};
-            if imgls{2}~=1 && n(1)==0
-                w=randpair;
-                a=ang;
-                n=size(w);
-            elseif imgls{2}~=1
-                w=[w;randpair];
-                a=[a;ang];
-                n=size(w);
-            elseif imgls{2}==1
-                %'TAKE NOTE!'
-            end
-        end
-    else % Linearly spaces the cells on a diagnol in predicable places
-        f=num/5+3;
-        l=linspace(r,imsize-r,num+f);
-        l2=linspace(imsize-r,r,num+f);
-        randpair=[l2;l];
-        randpair=randpair';
-        ang(1:uint16(num+f))=30;
-        n=[0 0]; 
-        i=0;
-        while n(1)<num && i<floor(num+f)
-            i=i+1;
-            q={randpair(i,:), ang(i)};
-            imgls=draw(img,q,l,r,steps);
-            img=imgls{1};
-            if imgls{2}~=1 && n(1)==0
-                w=randpair(i,:);
-                a=ang(i);
-                n=size(w);
-            elseif imgls{2}~=1
-                w=[w;randpair(i,:)];
-                a=[a;ang(i)];
-                n=size(w);
-            elseif imgls{2}==1
-                %'TAKE NOTE!'
-            end
-        end
-
-    end
+%             if imgls{2}~=1 && n(1)==0
+%                 w=randpair;
+%                 a=ang;
+%                 n=size(w);
+%             elseif imgls{2}~=1
+%                 w=[w;randpair];
+%                 a=[a;ang];
+%                 n=size(w);
+%             elseif imgls{2}==1
+%                 %'TAKE NOTE!'
+%             end
+%         end
+%     else % Linearly spaces the cells on a diagnol in predicable places
+%         f=num/5+3;
+%         l=linspace(r,imsize-r,num+f);
+%         l2=linspace(imsize-r,r,num+f);
+%         randpair=[l2;l];
+%         randpair=randpair';
+%         ang(1:uint16(num+f))=30;
+%         n=[0 0]; 
+%         i=0;
+%         while n(1)<num && i<floor(num+f)
+%             i=i+1;
+%             q={randpair(i,:), ang(i)};
+%             imgls=draw(img,q,l,r,steps);
+%             img=imgls{1};
+%             if imgls{2}~=1 && n(1)==0
+%                 w=randpair(i,:);
+%                 a=ang(i);
+%                 n=size(w);
+%             elseif imgls{2}~=1
+%                 w=[w;randpair(i,:)];
+%                 a=[a;ang(i)];
+%                 n=size(w);
+%             elseif imgls{2}==1
+%                 %'TAKE NOTE!'
+%             end
+%         end
+% 
+%     end
 %     %imagesc(img);
 %     imgdata=true;
 %     if strcmp(fix, 'no')== 0
@@ -121,10 +108,7 @@ function imgdata=drawEcoli (img,varargin)
 %         end
 %         cells=cells';
         %Pass all information the the form of a cell list
-        for p=1:length(img)
-            figure(p);imagesc(img{p});
-        end
-        imgdata={img,a,w,dim};%,cells};
+        imgdata={img,dim};%,cells};
 %     end
     
 
@@ -134,10 +118,10 @@ function imgls=draw(img,num,l,r,s)
 %%Draws the cells. Takes the image and num, a cell with the coordinate pair 
 %%in the first cell and the angles in the second. If redraw needed, it
 %%returns a 1.
-    xc=r;
+    xc=l;
     yc=r;
-    zc=l;
-    [x,y,z]=ellipsoid(xc,yc,zc,r,r,l,s);
+    zc=r;
+    [x,y,z]=ellipsoid(xc,yc,zc,l,r,r,s);
     
     x=round(x);
     y=round(y);
@@ -152,7 +136,6 @@ function imgls=draw(img,num,l,r,s)
     else
         for p=1:length(img)
             img{p}=sparse(imfill(full(img{p}),'holes'));
-            % figure(p);imagesc(k{p});
         end
     end
     imgls={img,redo};
@@ -168,15 +151,15 @@ function img=checkShape(img, pts)
     x=pts{1};
     y=pts{2};
     z=pts{3};
-    for i=1:size(x,1)
-        for j=1:size(x,1)
-            if x(i,j)+1 == 0 || y(i,j)+1 == 0 || z(i,j)+1==0 %exceeds the bounds of the image
-                n=n+1;
-            elseif x(i,j)+1 >= imsize || y(i,j)+1 >= imsize || z(i,j)+1>=imsize %exceeds the bounds of the image
-                n=n+1;
-            end
-        end
-    end
+%     for i=1:size(x,1)
+%         for j=1:size(x,1)
+%             if x(i,j)+1 == 0 || y(i,j)+1 == 0 || z(i,j)+1==0 %exceeds the bounds of the image
+%                 n=n+1;
+%             elseif x(i,j)+1 >= imsize || y(i,j)+1 >= imsize || z(i,j)+1>=imsize %exceeds the bounds of the image
+%                 n=n+1;
+%             end
+%         end
+%     end
 
     
     %funtion that transfers coord over for 3d
@@ -203,7 +186,7 @@ function img=checkShape(img, pts)
 % 
 %     end
 %     
-    if n>0 %|| s>0
+    if n>0
         img{1}=0;
     end
 end
