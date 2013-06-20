@@ -44,7 +44,9 @@ function imgdata=populateMolecules(imgdata,varargin)
         for m=1:length(img)
             img{m}(rna{m}>0)=rna{m}(rna{m}>0);
         end
-        %img{z}(img{z}>1)=img{z}(img{z}>1)*2;%necessary??????
+    end
+    for m=1:length(img)
+        img{m}(img{m}==1)=0;
     end
     
 

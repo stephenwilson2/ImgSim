@@ -136,6 +136,7 @@ function imgls=draw(img,num,l,r,s)
     else
         for p=1:length(img)
             img{p}=sparse(imfill(full(img{p}),'holes'));
+            p
         end
     end
     imgls={img,redo};

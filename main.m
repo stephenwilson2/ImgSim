@@ -6,16 +6,18 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=10;
+nmperpixel=1;
 
 %Define the height and length of the cells here in nanometers
-r=25; %nm
-l=100; %nm
+r=250; %nm
+l=1000; %nm
 
+r=r/nmperpixel;
+l=l/nmperpixel;
 
 %The number of molecules to measure
-numofmol=1;
-sizeofmol=1; % This number is represnetative of the nm of molecule 
+numofmol=5;
+sizeofmol=10; % This number is represnetative of the nm of molecule 
 % per molecule
 
 %Fluorescene Variables
@@ -34,7 +36,7 @@ fluorvar=1/n/k*power(num/de,-0.5);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
 
-steps=l*10; %Calculated of nmperpixel and cell size
+steps=200; %Calculated of nmperpixel and cell size
 
 %Sets the image size according to the number of cells and the cell size
 if r>l
@@ -42,9 +44,7 @@ if r>l
 else
     imgsize=2*l*numofcells;
 end
-% if numofcells==1
-%     imgsize=round(imgsize*1.3);
-% end
+
 k={};
 for i=1:r*2+1
     k{i}=sparse(imgsize,r*2+1);
@@ -56,28 +56,37 @@ tic
 imgdata=drawEcoli(k,numofcells,r,l,steps,'no');
 toc
 
-img=imgdata{1};
-for p=1:length(img)
-    figure(p);imagesc(img{p});
-end
+% img=imgdata{1};
+% for p=1:length(img)
+%     figure(p);imagesc(img{p});
+% end
 
 tic
 imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
 toc
-
-img=imgdata{1};
-for p=1:length(img)
-    figure(p*10);imagesc(img{p});
-end
+% 
+% img=imgdata{1};
+% for p=1:length(img)
+%     figure(p*10);imagesc(img{p});
+% end
 
 tic
 imgdata=psf(imgdata,fluorvar);
 toc
 
+
 img=imgdata{1};
-for p=1:length(img)
-    figure(p*100);imagesc(img{i});
+n=imgdata{3};
+
+for k=1:length(n)
+    if n{k}~=0
+        figure(n{k});imagesc(img{n{k}});
+    end
 end
+
+% for p=1:length(img)
+%       figure(p);imagesc(img{p});
+% end
 
 
 %    
