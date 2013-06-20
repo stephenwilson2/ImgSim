@@ -18,7 +18,7 @@ function imgdata=coarsen(id,varargin)
     ori=id{3};
     dim=id{4};
     cells=id{5};
-    flcells=id{6};
+    overlay=id{6};
     
     %Default values
     nmperpixel=1;
@@ -39,22 +39,20 @@ function imgdata=coarsen(id,varargin)
     target = cell2mat(optargs(2));
     
     ats=target/nmperpixel;
-    for i=1:length(flcells)
-        flcells{i}=accu(flcells{i},ats);
-    end
+    overlay=accu(overlay,ats);
     for i=1:length(cells)
         cells{i}=accu(cells{i},ats);
     end
-    figure(1)
-    subplot(1,2,1)
-    imagesc(img);
-    img=accu(img,ats);
-    subplot(1,2,2)
-    imagesc(img);
+%     figure(1)
+%     subplot(1,2,1)
+%     imagesc(img);
+%     img=accu(img,ats);
+%     subplot(1,2,2)
+%     imagesc(img);
     for m=1:length(angles)
         ori(m,:)=ori(m,:)/ats;
     end
-    imgdata={img,angles,ori,dim,cells,flcells};
+    imgdata={img,angles,ori,dim,cells,overlay};
 end
 
 
@@ -89,10 +87,8 @@ function final=accu(img,factor)
         end
     end
     y=cell2mat(x);
-    y
     y=y(1:w,1:h);
-    img
-    y
+
     v1 = reshape(img,numel(img),1);
     s1 = reshape(y,numel(y),1);
     
@@ -107,6 +103,4 @@ function final=accu(img,factor)
     end
     
     final=cell2mat(f);
-    final
-
 end

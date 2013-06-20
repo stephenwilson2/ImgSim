@@ -13,7 +13,7 @@ h=500; %nm
 l=2000; %nm
 
 %The number of molecules to measure
-numofmol=5;
+numofmol=1;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -92,18 +92,19 @@ if length(imgdata)>1
     imgdata{6}=psf(imgdata{6},fluorvar);
     toc
    
-%     tic
-%     imgdata=ovlay(imgdata,imgdata{5});
-%     toc
+    tic
+    imgdata{6}=imgdata{6}+imgdata{1};
+    toc
     
     tic
     graph(imgdata)
     toc
     
-%     tic
-%     imgdata=coarsen(imgdata,nmperpixel,64);
-%     toc
-%     tic
-%     graph(imgdata)
-%     toc
+    tic
+    imgdata=coarsen(imgdata,nmperpixel,64);
+    toc
+    
+    tic
+    graph(imgdata)
+    toc
 end
