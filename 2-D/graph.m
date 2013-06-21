@@ -5,6 +5,7 @@ function graph(imgdata)
     n=randi([1 9]);
     figure(n);
     imagesc(overlay);
+    axis equal;
     figure(n*100)
     imshow(mat2gray(overlay))
     axis equal;

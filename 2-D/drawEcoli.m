@@ -53,7 +53,7 @@ function imgdata=drawEcoli (img,varargin)
     if strcmp(fix, 'no')== 1
         n=[0 0];
         while n(1)<num
-            randpair=randi([height imsize-height],1,2); %gets a random origin for a cell
+            randpair=randi([1 imsize],1,2); %gets a random origin for a cell
             ang = random('normal',180,90,1,1);
             q={randpair, ang};
             imgls=draw(img,q,len,height,steps);
@@ -110,7 +110,9 @@ function imgdata=drawEcoli (img,varargin)
         %Create individual cells in a cell list
         dim={len,height};
         u(len,height)=0;
-        calc2 = uint32(calculateEllipse(len/2, height/2, len/2, height/2, 0, steps));
+        calc2 = uint32(spherocylinder(len/2, height/2, len/2, height/2, 0, steps));
+        
+        calc2 = imcrop(calc2,[0 0 len height]);
         calc2(calc2==0)=1;
         calc2=calc2';
         for calc =calc2
@@ -133,7 +135,7 @@ function imgls=draw(img,num,l,h,s)
 %%Draws the cells. Takes the image and num, a cell with the coordinate pair 
 %%in the first cell and the angles in the second. If redraw needed, it
 %%returns a 1.
-    calc = calculateEllipse(num{1}(1), num{1}(2), l/2, h/2, num{2}, ...
+    calc = spherocylinder(num{1}(1), num{1}(2), l/2, h/2, num{2}, ...
         s);
     calc=uint32(calc);
     bi=img;
@@ -182,7 +184,7 @@ function img=checkShape(img, pts)
         img(A==1) = 1;
 
     end
-    
+
     if n>0 || s>0
         img=0;
     end

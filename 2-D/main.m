@@ -5,15 +5,15 @@ ip = 'C:/Users/sw5/ImgSim'; % make less specific later
 addpath(ip);
 
 % Default values
-numofcells=10;
+numofcells=1;
 nmperpixel=1;
 
 %Define the height and length of the cells here in nanometers
-h=500; %nm
-l=2000; %nm
+h=50; %nm
+l=200; %nm
 
 %The number of molecules to measure
-numofmol=10;
+numofmol=1;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -84,7 +84,7 @@ if length(imgdata)>1
     %                           4)dimensions of the cell (in a cell type: len, height)
     %                           5)the molecules channel (in a cell type)
     
-    %Shows the cells prior to the PSF
+ %   Shows the cells prior to the PSF
     for i=1:length(imgdata{5})
         figure(i*1000);imagesc(imgdata{5}{i});
     end 
@@ -105,12 +105,12 @@ if length(imgdata)>1
     tic
     graph(imgdata)
     toc
-    
-    tic
-    imgdata=coarsen(imgdata,nmperpixel,64);
-    toc
-    
-    tic
-    graph(imgdata)
-    toc
+%     
+%     tic
+%     imgdata=coarsen(imgdata,nmperpixel,64);
+%     toc
+%     
+%     tic
+%     graph(imgdata)
+%     toc
 end
