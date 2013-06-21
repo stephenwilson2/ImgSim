@@ -5,7 +5,7 @@ ip = 'C:/Users/sw5/ImgSim'; % make less specific later
 addpath(ip);
 
 % Default values
-numofcells=1;
+numofcells=10;
 nmperpixel=1;
 
 %Define the height and length of the cells here in nanometers
@@ -13,8 +13,8 @@ h=500; %nm
 l=2000; %nm
 
 %The number of molecules to measure
-numofmol=1;
-sizeofmol=1000; % This number is represnetative of the nm of molecule 
+numofmol=10;
+sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
 %Fluorescene Variables
@@ -83,6 +83,12 @@ if length(imgdata)>1
     %                           3)origins of the cells
     %                           4)dimensions of the cell (in a cell type: len, height)
     %                           5)the molecules channel (in a cell type)
+    
+    %Shows the cells prior to the PSF
+    for i=1:length(imgdata{5})
+        figure(i*1000);imagesc(imgdata{5}{i});
+    end 
+    
     tic
     imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
     toc
