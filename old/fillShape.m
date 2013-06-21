@@ -1,3 +1,0 @@
-function fillShape(img)
-
-end

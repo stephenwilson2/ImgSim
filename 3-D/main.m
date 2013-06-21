@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=1;
+nmperpixel=10;
 
 %Define the height and length of the cells here in nanometers
 r=250; %nm
