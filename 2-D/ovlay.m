@@ -35,6 +35,5 @@ function imgdata=ovlay(imgdata,bi,oi)
         end
     
     end
-
     imgdata={img,angles,ori,dim,cells,bi};
 end

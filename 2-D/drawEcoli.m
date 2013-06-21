@@ -111,8 +111,6 @@ function imgdata=drawEcoli (img,varargin)
         dim={len,height};
         u(len,height)=0;
         calc2 = uint32(spherocylinder(len/2, height/2, len/2, height/2, 0, steps));
-        
-        calc2 = imcrop(calc2,[0 0 len height]);
         calc2(calc2==0)=1;
         calc2=calc2';
         for calc =calc2
