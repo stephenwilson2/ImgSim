@@ -4,8 +4,7 @@ function [X Y]=spherocylinder(x,y,a,b,angle,steps)
         tmp=a;
         a=b;
         b=tmp;
-    end
-    
+    end   
      
     alpha = linspace(0, 180, steps/4)' .* (pi / 180); %creates a linearly spaced vector from 0 to 180 of length steps.
     X = x + (a * cos(alpha) * cos(beta) - a * sin(alpha) * sin(beta))-(b-a)*sin(beta);
@@ -22,19 +21,7 @@ function [X Y]=spherocylinder(x,y,a,b,angle,steps)
         Y2=[Y2;Y2(length(Y2))+1*cos(beta)];
     end
     X=[X;X2];
-    Y=[Y;Y2];
-    [X Y]
-%     
-%     A = uint16(zeros(5000,5000));
-%     for pair = round([X Y])'
-%         if pair(1)>0 && pair(2)>0 && pair(1)<5000 && pair(2)<5000
-%             A(pair(1),pair(2)) = 1;
-%         end
-%     end
-% 
-%     figure(6);imagesc(A);
-
-    
+    Y=[Y;Y2];    
 
     if nargout==1, X = [X Y]; end
 end

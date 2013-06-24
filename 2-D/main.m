@@ -9,8 +9,8 @@ numofcells=1;
 nmperpixel=1;
 
 %Define the height and length of the cells here in nanometers
-h=50; %nm
-l=200; %nm
+h=500; %nm
+l=2000; %nm
 
 %The number of molecules to measure
 numofmol=1;
@@ -51,9 +51,9 @@ end
 k(imgsize,imgsize) = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+fprintf('%s\n', 'Drawing mask');
 tic
-imgdata=drawEcoli(k,numofcells,h,l,steps,'no');
+imgdata=drawEcoli(k,numofcells,l,h,steps,'no');
 % %drawEcoli inputs:1)16-bit image matrix
 %                   2)number of cells to try and put in*
 %                   3)height of cell (in px)*
@@ -71,7 +71,10 @@ imgdata=drawEcoli(k,numofcells,h,l,steps,'no');
 %                   5)the cells
 toc
 if length(imgdata)>1
+    fprintf('\n%s\n', 'Populating Molecules');
+    tic
     imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+    toc
     %% Populates cells with molecules of some shape
     %populateMolecules inputs:  1)imagedata
     %                           2)copies of molecules*
@@ -83,25 +86,29 @@ if length(imgdata)>1
     %                           3)origins of the cells
     %                           4)dimensions of the cell (in a cell type: len, height)
     %                           5)the molecules channel (in a cell type)
-    
- %   Shows the cells prior to the PSF
-    for i=1:length(imgdata{5})
-        figure(i*1000);imagesc(imgdata{5}{i});
-    end 
-    
+    %                           6)the origins of the molecules
+ 
+    %   Shows the cells prior to the PSF
+%     for i=1:length(imgdata{5})
+%         figure(i*1000);imagesc(imgdata{5}{i});
+%         axis equal;
+%     end 
+    fprintf('\n%s\n', 'Overlaying Molecules with mask');
     tic
     imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
     toc
     
-    
+%     figure(4);imagesc(imgdata{1});
+%     figure(5);imagesc(imgdata{6});
+    fprintf('\n%s\n', 'Applying PSF directly to molecules (equiv. 1:1 binding)');
     tic
     imgdata{6}=psf(imgdata{6},fluorvar);
     toc
-   
+   fprintf('\n%s\n', 'Overlaying Fluorescence');
     tic
     imgdata{6}=imgdata{6}+imgdata{1};
     toc
-    
+    fprintf('\n%s\n', 'Graphing');
     tic
     graph(imgdata)
     toc

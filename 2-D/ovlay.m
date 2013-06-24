@@ -17,7 +17,7 @@ function imgdata=ovlay(imgdata,bi,oi)
 
     t=size(bi);
     imgs=t(1);
-
+    
     for i=1:length(angles)
         cel=imrotate(cells{i},-angles(i));
         n=size(cel);
@@ -28,7 +28,7 @@ function imgdata=ovlay(imgdata,bi,oi)
                 for y=1:n(2)
                     r=uint32(ori(i,2)-n(2)/2+y);
                     if r>0 && r<imgs
-                        bi(m,r)=cel(x,y)*100;%+cellmask(m,r);
+                        bi(m,r)=cel(x,y)*100;%+img(m,r);
                     end
                 end
             end

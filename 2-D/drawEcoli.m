@@ -44,12 +44,6 @@ function imgdata=drawEcoli (img,varargin)
     
     % Fixes or randomizes the locations of the cells
     
-    if len<height
-        tmp=height;
-        height=len;
-        len=tmp;
-    end
-    
     if strcmp(fix, 'no')== 1
         n=[0 0];
         while n(1)<num
@@ -109,10 +103,13 @@ function imgdata=drawEcoli (img,varargin)
     if imgdata~=false
         %Create individual cells in a cell list
         dim={len,height};
-        u(len,height)=0;
-        calc2 = round(spherocylinder(len/2+1, height/2, len/2, height/2, 0, steps));
+        u(len, height)=0;
+        calc2 = abs(round(spherocylinder(25, 100, len/2, height/2, 0, steps)));
+        
         calc2(calc2==0)=1;
         calc2=calc2';
+  
+        
         for calc =calc2
             u(calc(1),calc(2))=1;
         end
@@ -121,6 +118,7 @@ function imgdata=drawEcoli (img,varargin)
             cells(i)={u};
         end
         cells=cells';
+%         figure(8);imagesc(cells{1});axis equal;
         %Pass all information the the form of a cell list
         
         imgdata={img,a,w,dim,cells};
@@ -136,6 +134,7 @@ function imgls=draw(img,num,l,h,s)
     calc = spherocylinder(num{1}(1)+1, num{1}(2), l/2, h/2, num{2}, ...
         s);
     calc=round(calc);
+    
     bi=img;
     redo=0;
     img=checkShape(img,calc);
