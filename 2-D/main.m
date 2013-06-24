@@ -107,13 +107,13 @@ if length(imgdata)>1
     toc
     fprintf('\n%s\n', 'Graphing');
     
-    fl='TestNumofMolClumping_gray';
-    i=num2str(numofmol);
-    fl=strcat(fl,i,'.fig');
+%     fl='TestNumofMolClumping_gray';
+%     i=num2str(numofmol);
+%     fl=strcat(fl,i,'.fig');
     
     tic
     graph(imgdata)
-    saveas(gcf, fl)
+%     saveas(gcf, fl)
     toc
 %     
 %     tic
