@@ -48,7 +48,7 @@ function imgdata=drawEcoli (img,varargin)
         n=[0 0];
         while n(1)<num
             randpair=randi([1 imsize],1,2); %gets a random origin for a cell
-            ang = random('normal',180,90,1,1);
+            ang = randi([90 180],1,1);
             q={randpair, ang};
             imgls=draw(img,q,len,height,steps);
             img=imgls{1};

@@ -39,7 +39,7 @@ function imgdata=populateMolecules(imgdata,varargin)
     optargs(1:numvarargs) = varargin;
     num = cell2mat(optargs(1));
     sz = cell2mat(optargs(2));
-    molori{num}=0;
+    molori{length(cells)}=[];
 
     for i=1:length(cells)
         for n=1:num
@@ -51,7 +51,7 @@ function imgdata=populateMolecules(imgdata,varargin)
                 y=randi([1 (height-1)]);
             end
             xy=[x,y];
-            molori{n}=xy;
+            molori{i}=xy;
             rna=rnaodna(xy,len,height,sz,cells{i});
             cells{i}(rna>0)=rna(rna>0);
         end
@@ -59,7 +59,6 @@ function imgdata=populateMolecules(imgdata,varargin)
         tmp(cells{i}>1)=cells{i}(cells{i}>1)*2;
         cells{i}=tmp;
     end
-
     imgdata={img,angles,ori,dim,cells,molori};
 end
 function pts=rnaodna(ori,len,height,size,cell)

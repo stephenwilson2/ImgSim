@@ -13,7 +13,7 @@ h=500; %nm
 l=2000; %nm
 
 %The number of molecules to measure
-numofmol=1;
+numofmol=10;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -32,10 +32,6 @@ fluorvar=1/n/k*power(num/de,-0.5);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
-% h=h*2;
-% l=l*2;
-% h=round(h/nmperpixel);
-% l=round(l/nmperpixel);
 steps=l*nmperpixel*10; %Calculated of nmperpixel and cell size
 
 %Sets the image size according to the number of cells and the cell size
@@ -93,13 +89,14 @@ if length(imgdata)>1
 %         figure(i*1000);imagesc(imgdata{5}{i});
 %         axis equal;
 %     end 
+
     fprintf('\n%s\n', 'Overlaying Molecules with mask');
     tic
     imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
     toc
     
-%     figure(4);imagesc(imgdata{1});
-%     figure(5);imagesc(imgdata{6});
+% % %     figure(4);imagesc(imgdata{1});
+% % %     figure(5);imagesc(imgdata{6});
     fprintf('\n%s\n', 'Applying PSF directly to molecules (equiv. 1:1 binding)');
     tic
     imgdata{6}=psf(imgdata{6},fluorvar);
@@ -109,15 +106,21 @@ if length(imgdata)>1
     imgdata{6}=imgdata{6}+imgdata{1};
     toc
     fprintf('\n%s\n', 'Graphing');
+    
+    fl='TestNumofMolClumping';
+    i=num2str(numofmol);
+    fl=strcat(fl,i,'.fig');
+    
+    tic
+    graph(imgdata)
+    saveas(gcf, fl)
+    toc
+    
+    tic
+    imgdata=coarsen(imgdata,nmperpixel,64);
+    toc
+    
     tic
     graph(imgdata)
     toc
-%     
-%     tic
-%     imgdata=coarsen(imgdata,nmperpixel,64);
-%     toc
-%     
-%     tic
-%     graph(imgdata)
-%     toc
 end
