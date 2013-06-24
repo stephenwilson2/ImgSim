@@ -13,7 +13,7 @@ h=500; %nm
 l=2000; %nm
 
 %The number of molecules to measure
-numofmol=10;
+numofmol=2000;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -101,13 +101,13 @@ if length(imgdata)>1
     tic
     imgdata{6}=psf(imgdata{6},fluorvar);
     toc
-   fprintf('\n%s\n', 'Overlaying Fluorescence');
+    fprintf('\n%s\n', 'Overlaying Fluorescence');
     tic
     imgdata{6}=imgdata{6}+imgdata{1};
     toc
     fprintf('\n%s\n', 'Graphing');
     
-    fl='TestNumofMolClumping';
+    fl='TestNumofMolClumping_gray';
     i=num2str(numofmol);
     fl=strcat(fl,i,'.fig');
     
@@ -115,12 +115,12 @@ if length(imgdata)>1
     graph(imgdata)
     saveas(gcf, fl)
     toc
-    
-    tic
-    imgdata=coarsen(imgdata,nmperpixel,64);
-    toc
-    
-    tic
-    graph(imgdata)
-    toc
+%     
+%     tic
+%     imgdata=coarsen(imgdata,nmperpixel,64);
+%     toc
+%     
+%     tic
+%     graph(imgdata)
+%     toc
 end
