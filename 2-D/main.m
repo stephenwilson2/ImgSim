@@ -1,7 +1,7 @@
 %% main
 clear all
 close all
-ip = 'C:/Users/sw5/ImgSim'; % make less specific later
+ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
 addpath(ip);
 
 % Default values
@@ -13,7 +13,7 @@ h=500; %nm
 l=2000; %nm
 
 %The number of molecules to measure
-numofmol=2000;
+numofmol=200;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -101,26 +101,22 @@ if length(imgdata)>1
     tic
     imgdata{6}=psf(imgdata{6},fluorvar);
     toc
-    fprintf('\n%s\n', 'Overlaying Fluorescence');
-    tic
-    imgdata{6}=imgdata{6}+imgdata{1};
-    toc
+
+%     tic
+%     fprintf('\n%s\n', 'Overlaying Fluorescence');
+%     imgdata{6}=imgdata{6}+imgdata{1};
+%     toc
+
     fprintf('\n%s\n', 'Graphing');
-    
-%     fl='TestNumofMolClumping_gray';
-%     i=num2str(numofmol);
-%     fl=strcat(fl,i,'.fig');
-    
     tic
     graph(imgdata)
-%     saveas(gcf, fl)
     toc
-%     
-%     tic
-%     imgdata=coarsen(imgdata,nmperpixel,64);
-%     toc
-%     
-%     tic
-%     graph(imgdata)
-%     toc
+    
+    tic
+    imgdata=coarsen(imgdata,nmperpixel,64);
+    toc
+
+    tic
+    graph(imgdata)
+    toc
 end
