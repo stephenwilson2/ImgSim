@@ -90,11 +90,11 @@ function testIntensity()
             imgdata=coarsen(imgdata,nmperpixel,64);
             toc
             
-            tic
-            graph(imgdata)
-            saveas(gcf, fl)
-            close all;
-            toc
+%             tic
+%             graph(imgdata)
+%             saveas(gcf, fl)
+%             close all;
+%             toc
             datals{z}=imgdata;
         end
         save('TestIntensity.mat','datals');
