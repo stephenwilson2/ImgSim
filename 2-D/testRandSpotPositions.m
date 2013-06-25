@@ -1,5 +1,5 @@
 function testRandSpotPositions()
-datapts=1000;
+datapts=10000;
 bins=100;
 
 

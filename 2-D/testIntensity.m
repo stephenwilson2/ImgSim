@@ -5,7 +5,7 @@ function testIntensity()
     ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
     addpath(ip);
 %  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   load('TestIntensity.mat')
-    imgnum=2;
+    imgnum=5;
     
     % Default values
     numofcells=1;
@@ -105,7 +105,6 @@ end
 function analyze(data,lsnum)
     pair(length(data),2)=0;
     for i=1:length(data)
-        i
         V=var(data{i}{6});
         numofmol=lsnum(i);
         V=sum(sum(V)); %%%%%%%%%not right?
@@ -116,20 +115,18 @@ function analyze(data,lsnum)
             pair=[pair; [numofmol V]];
         end
     end
-    p=polyfit(pair(1,:), pair(2,:),1);
+    p=polyfit(pair(:,1), pair(:,2),1);
     k=sprintf('The slope is: %d', p(1));
-    yfit = polyval(p,pair(1,:));
-    pair
-    pair(1,:)
+    yfit = polyval(p,pair(:,1));
     figure(72);
-    hold on;
-    plot(pair(1,:),pair(2,:),'color','blue');
-    plot(pair(1,:),yfit,'color', 'red');
+    hold all;
+    plot(pair(:,1),pair(:,2),'color','blue');
+    plot(pair(:,1),yfit,'color', 'red');
     hold off;
     title('Variance^2 compared to number of molecules',...
         'FontWeight','bold')
     xlabel('Number of molecules')
     ylabel('Variance^2')
-    text(100,100,k);
+    text(100,200,k);
     saveas(gcf, 'TestIntensity.fig')
 end
