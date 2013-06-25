@@ -1,12 +1,14 @@
 function testRandSpotPositions()
-datapts=10000;
-bins=100;
+datapts=50000;
+
 
 
 %Define the height and length of the cells here in nanometers
 h=50; %nm
 l=200; %nm
-
+bin1=h;
+bin2=l;
+bina=90;
 
 %The number of molecules to measure
 numofmol=1;
@@ -58,15 +60,12 @@ toc
 
 
 
-
-
-
 save('TestRandomOrigins.mat','molx','moly','angles');
 figure(1);
-[f,x]=hist(angles,bins);
+[f,x]=hist(angles,bina);
 bar(x,f/datapts)
 hold on;
-expect(1:length(angles))=1/bins;
+expect(1:length(angles))=1/bina;
 expect=[angles; expect];
 plot(expect(1,:),expect(2,:),'color','red')
 hold off;
@@ -83,7 +82,7 @@ saveas(gcf, 'testhistangles.fig')
 
 expect=[];
 figure(2);
-[f2,x2]=hist(molx,bins);
+[f2,x2]=hist(molx,1:1:bin1);
 bar(x2,f2/trapz(x2,f2))
 hold on;
 molx=sort(molx);
@@ -108,7 +107,7 @@ saveas(gcf, 'testhistmolx.fig')
 
 expect=[];
 figure(3);
-[f3,x3]=hist(moly,bins);
+[f3,x3]=hist(moly,1:1:bin2);
 bar(x3,f3/trapz(x3,f3))
 hold on;
 moly=sort(moly);
