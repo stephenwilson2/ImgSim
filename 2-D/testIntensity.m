@@ -5,7 +5,7 @@ function testIntensity()
     ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
     addpath(ip);
 %  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   load('TestIntensity.mat')
-    imgnum=5;
+    imgnum=10;
     
     % Default values
     numofcells=1;
