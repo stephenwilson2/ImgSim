@@ -37,8 +37,8 @@ function imgdata=drawEcoli (img,varargin)
     % Overwrites defaults if optional input exists
     optargs(1:numvarargs) = varargin;
     num = cell2mat(optargs(1));
-    len = cell2mat(optargs(3));
-    height = cell2mat(optargs(2));
+    len = cell2mat(optargs(2));
+    height = cell2mat(optargs(3));
     steps = cell2mat(optargs(4));
     fix = cell2mat(optargs(5));
     
@@ -47,6 +47,7 @@ function imgdata=drawEcoli (img,varargin)
     if strcmp(fix, 'no')== 1
         n=[0 0];
         while n(1)<num
+            rng('shuffle');
             randpair=randi([1 imsize],1,2); %gets a random origin for a cell
             ang = randi([90 180],1,1);
             q={randpair, ang};

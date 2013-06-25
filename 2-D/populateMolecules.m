@@ -43,9 +43,11 @@ function imgdata=populateMolecules(imgdata,varargin)
 
     for i=1:length(cells)
         for n=1:num
+            rng('shuffle');
             x=randi([1 (len-1)]);
             y=randi([1 (height-1)]);
             while cells{i}(x,y)==0
+                rng('shuffle');
                 x=randi([1 (len-1)]);
                 y=randi([1 (height-1)]);
             end
