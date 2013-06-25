@@ -12,6 +12,7 @@ function imgdata=populateMolecules(imgdata,varargin)
 %                           4)dimensions of the cell (in a cell type: len, height)
 %                           5)the molecules channel (in a cell type)
 
+
     %Extract data about image
     img=imgdata{1};
     angles=imgdata{2};
@@ -24,6 +25,7 @@ function imgdata=populateMolecules(imgdata,varargin)
     %Default values
     num = 5; % copies of molecules
     sz=100;
+
 
     
     % Sets defaults for optional inputs
@@ -41,13 +43,12 @@ function imgdata=populateMolecules(imgdata,varargin)
     sz = cell2mat(optargs(2));
     molori{length(cells)}=[];
 
+
     for i=1:length(cells)
         for n=1:num
-            rng('shuffle');
             x=randi([1 (len-1)]);
             y=randi([1 (height-1)]);
             while cells{i}(x,y)==0
-                rng('shuffle');
                 x=randi([1 (len-1)]);
                 y=randi([1 (height-1)]);
             end
@@ -76,6 +77,7 @@ function pts=rnaodna(ori,len,height,size,cell)
         elseif ori(2)==1
             ori(2)=ori(2)+1;
 
+
         elseif ori(2)==height-1
             ori(2)=ori(2)-1;
         elseif ori(1)==len-1
@@ -88,15 +90,18 @@ function pts=rnaodna(ori,len,height,size,cell)
         elseif x==2
             ori(2)=ori(2)+1;
 
+
         elseif x==3 
             ori(2)=ori(2)-1;
         elseif x==4
             ori(1)=ori(1)-1;
 
+
         elseif ori(1)==1
             ori(1)=ori(1)+1;
         elseif ori(2)==1
             ori(2)=ori(2)+1;
+
 
         elseif ori(2)==len
             ori(2)=ori(2)-1;
@@ -107,3 +112,4 @@ function pts=rnaodna(ori,len,height,size,cell)
     end
     pts=u;
 end 
+

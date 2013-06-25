@@ -16,6 +16,7 @@ function imgdata=drawEcoli (img,varargin)
 %                   4)dimensions of the cell (in a cell type: len, height)
 %                   5)the cells
 
+
     %Default values
     num = 5;
     len = 10;
@@ -37,8 +38,8 @@ function imgdata=drawEcoli (img,varargin)
     % Overwrites defaults if optional input exists
     optargs(1:numvarargs) = varargin;
     num = cell2mat(optargs(1));
-    len = cell2mat(optargs(2));
-    height = cell2mat(optargs(3));
+    len = cell2mat(optargs(3));
+    height = cell2mat(optargs(2));
     steps = cell2mat(optargs(4));
     fix = cell2mat(optargs(5));
     
@@ -47,7 +48,6 @@ function imgdata=drawEcoli (img,varargin)
     if strcmp(fix, 'no')== 1
         n=[0 0];
         while n(1)<num
-            rng('shuffle');
             randpair=randi([1 imsize],1,2); %gets a random origin for a cell
             ang = randi([90 180],1,1);
             q={randpair, ang};
@@ -92,6 +92,7 @@ function imgdata=drawEcoli (img,varargin)
             end
         end
 
+
     end
     %imagesc(img);
     imgdata=true;
@@ -126,7 +127,9 @@ function imgdata=drawEcoli (img,varargin)
     end
     
 
+
 end
+
 
 function imgls=draw(img,num,l,h,s)
 %%Draws the cells. Takes the image and num, a cell with the coordinate pair 
@@ -148,10 +151,12 @@ function imgls=draw(img,num,l,h,s)
     imgls={img,redo};
 end
 
+
 function img=checkShape(img, pts)
 %%Checks to make sure the cell is not outside the bounds of the img or 
 %%overlapping with another cell. If it is, it returns 0. Takes the image 
 %%and pts, coordinate pairs about the location of the cells
+
 
     n=0;
     t=size(img);
@@ -181,9 +186,12 @@ function img=checkShape(img, pts)
         
         img(A==1) = 1;
 
+
     end
+
 
     if n>0 || s>0
         img=0;
     end
 end
+

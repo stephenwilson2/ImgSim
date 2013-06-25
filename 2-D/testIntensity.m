@@ -4,8 +4,8 @@ function testIntensity()
     close all
     ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
     addpath(ip);
-    load('TestIntensity.mat')
-    imgnum=5;
+%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   load('TestIntensity.mat')
+    imgnum=2;
     
     % Default values
     numofcells=1;
@@ -58,7 +58,7 @@ function testIntensity()
     tmpimgdata=imgdata;
     if length(imgdata)>1
         
-        datals(imgnum)={};
+        datals=cell(imgnum);
         fli='TestIntensity_gray_coarsen';
         z=0;
         for numofmol=lsofnumofmol
@@ -66,7 +66,8 @@ function testIntensity()
             imgdata=tmpimgdata;
             i=num2str(numofmol);
             cellnum=num2str(z);
-            fl=strcat(fli,z,'_',i,'.fig');
+
+            fl=strcat(fli,cellnum,'_',i,'.fig');
             
             fprintf('\n%s\n', 'Populating Molecules');
             tic
@@ -88,13 +89,13 @@ function testIntensity()
             tic
             imgdata=coarsen(imgdata,nmperpixel,64);
             toc
-
+            
             tic
             graph(imgdata)
             saveas(gcf, fl)
             close all;
             toc
-            datals(z)=imgdata;
+            datals{z}=imgdata;
         end
         save('TestIntensity.mat','datals');
     end
@@ -102,24 +103,33 @@ function testIntensity()
 end
 
 function analyze(data,lsnum)
-    pair(length(data))=[];
+    pair(length(data),2)=0;
     for i=1:length(data)
         i
         V=var(data{i}{6});
         numofmol=lsnum(i);
-        V
+        V=sum(sum(V)); %%%%%%%%%not right?
         V=V^2;
-        pair=[pair [numofmol V]];
+        if i==1
+            pair=[numofmol V];
+        else
+            pair=[pair; [numofmol V]];
+        end
     end
     p=polyfit(pair(1,:), pair(2,:),1);
     k=sprintf('The slope is: %d', p(1));
+    yfit = polyval(p,pair(1,:));
     pair
+    pair(1,:)
     figure(72);
-    plot(pair);
+    hold on;
+    plot(pair(1,:),pair(2,:),'color','blue');
+    plot(pair(1,:),yfit,'color', 'red');
+    hold off;
     title('Variance^2 compared to number of molecules',...
         'FontWeight','bold')
     xlabel('Number of molecules')
     ylabel('Variance^2')
-    text(10,10,k);
+    text(100,100,k);
     saveas(gcf, 'TestIntensity.fig')
 end
