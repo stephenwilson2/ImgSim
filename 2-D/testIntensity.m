@@ -5,7 +5,7 @@ function testIntensity()
     ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
     addpath(ip);
 %  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   load('TestIntensity.mat')
-    imgnum=10;
+    imgnum=100;
     
     % Default values
     numofcells=1;
@@ -50,11 +50,11 @@ function testIntensity()
     k(imgsize,imgsize) = 0;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    fprintf('%s\n', 'Drawing mask');
+
 
     tic
     imgdata=drawEcoli(k,numofcells,l,h,steps,'no');
-    toc
+
     tmpimgdata=imgdata;
     if length(imgdata)>1
         
@@ -63,33 +63,23 @@ function testIntensity()
         z=0;
         for numofmol=lsofnumofmol
             z=z+1;
+            z
             imgdata=tmpimgdata;
             i=num2str(numofmol);
             cellnum=num2str(z);
 
             fl=strcat(fli,cellnum,'_',i,'.fig');
-            
-            fprintf('\n%s\n', 'Populating Molecules');
-            tic
+
             imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
-            toc
-
-            fprintf('\n%s\n', 'Overlaying Molecules with mask');
-            tic
+          %  wopsf=imgdata{5};
             imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
-            toc
 
-            fprintf('\n%s\n', 'Applying PSF directly to molecules (equiv. 1:1 binding)');
-            tic
             imgdata{6}=psf(imgdata{6},fluorvar);
-            toc
-
-            fprintf('\n%s\n', 'Coarsening');
-
-            tic
+ 
             imgdata=coarsen(imgdata,nmperpixel,64);
-            toc
-            
+%             figure(z);
+%             imagesc(imgdata{5}{1});
+%             axis equal;
 %             tic
 %             graph(imgdata)
 %             saveas(gcf, fl)
@@ -97,36 +87,112 @@ function testIntensity()
 %             toc
             datals{z}=imgdata;
         end
-        save('TestIntensity.mat','datals');
+        save('TestIntensity.mat','datals','lsofnumofmol');
     end
     analyze(datals,lsofnumofmol);
+    toc
 end
 
 function analyze(data,lsnum)
-    pair(length(data),2)=0;
+    pairpsf(length(data),3)=0;
     for i=1:length(data)
-        V=var(data{i}{6});
+        V=var(data{i}{6}(:));
         numofmol=lsnum(i);
-        V=sum(sum(V)); %%%%%%%%%not right?
         V=V^2;
-        if i==1
-            pair=[numofmol V];
-        else
-            pair=[pair; [numofmol V]];
-        end
+        pairpsf(i,1)=numofmol;
+        pairpsf(i,2)=log(V);
+        pairpsf(i,3)=V;
     end
-    p=polyfit(pair(:,1), pair(:,2),1);
-    k=sprintf('The slope is: %d', p(1));
-    yfit = polyval(p,pair(:,1));
+    pairwopsf(length(data),3)=0;
+    for i=1:length(data)
+        V=var(data{i}{5}{1}(:));
+        numofmol=lsnum(i);
+        V=V^2;
+        pairwopsf(i,1)=numofmol;
+        pairwopsf(i,2)=log(V);
+        pairwopsf(i,3)=V;
+    end
+    
+    %with PSF    
     figure(72);
+    subplot(1,4,1);
+    [p,s]=polyfit(pairpsf(:,1), pairpsf(:,2),1);
+    k=sprintf('The slope is: %d', p(1));
+    y=pairpsf(:,2);
+    yfit = polyval(p,pairpsf(:,1));
+    R2psf = corrcoef(pairpsf(:,2), yfit);    
     hold all;
-    plot(pair(:,1),pair(:,2),'color','blue');
-    plot(pair(:,1),yfit,'color', 'red');
+    plot(pairpsf(:,1),pairpsf(:,2),'color','blue');
+    plot(pairpsf(:,1),yfit,'color', 'red');
+    hold off;
+    title('Variance^2 compared to number of molecules',...
+        'FontWeight','bold')
+    xlabel('Number of molecules')
+    ylabel('log(Variance^2)')
+    legend('Simulation with PSF','Fit')
+    text(100,1.5,k);
+    q=sprintf('The R^2 is: %d', R2psf(1,2));
+    text(100,1,q);
+    
+
+    subplot(1,4,2);
+    [p,s]=polyfit(pairpsf(:,1), pairpsf(:,3),2);
+    k=sprintf('The slope is: %d', p(1));
+    y=pairpsf(:,3);
+    yfit = polyval(p,pairpsf(:,1));
+    R2psf = corrcoef(pairpsf(:,3), yfit);    
+    hold all;
+    plot(pairpsf(:,1),pairpsf(:,3),'color','blue');
+    plot(pairpsf(:,1),yfit,'color', 'red'); 
     hold off;
     title('Variance^2 compared to number of molecules',...
         'FontWeight','bold')
     xlabel('Number of molecules')
     ylabel('Variance^2')
-    text(100,200,k);
+    legend('Simulation with PSF','Fit')
+    text(100,2.5,k);
+    q=sprintf('The R^2 is: %d', R2psf(1,2));
+    text(100,2,q);
+    
+    %without PSF
+    subplot(1,4,3);
+    [p,s]=polyfit(pairwopsf(:,1), pairwopsf(:,2),1);
+    k=sprintf('The slope is: %d', p(1));
+    y=pairwopsf(:,2);
+    yfit = polyval(p,pairwopsf(:,1));
+    R2wopsf = corrcoef(pairwopsf(:,2), yfit);
+    hold all;
+    plot(pairwopsf(:,1),pairwopsf(:,2),'color','blue');
+    plot(pairwopsf(:,1),yfit,'color', 'red');
+    hold off;
+    title('Variance^2 compared to number of molecules',...
+        'FontWeight','bold')
+    xlabel('Number of molecules')
+    ylabel('log(Variance^2)')
+    legend('Simulation without PSF','Fit')
+    text(100,-12.7,k);
+    q=sprintf('The R^2 is: %d', R2wopsf(1,2));
+    text(100,-12.5,q);
+    
+    subplot(1,4,4);
+    [p,s]=polyfit(pairwopsf(:,1), pairwopsf(:,3),2);
+    k=sprintf('The slope is: %d', p(1));
+    y=pairwopsf(:,3);
+    yfit = polyval(p,pairwopsf(:,1));
+    R2wopsf = corrcoef(pairwopsf(:,3), yfit);
+    hold all;
+    plot(pairwopsf(:,1),pairwopsf(:,3),'color','blue');
+    plot(pairwopsf(:,1),yfit,'color', 'red');  
+    hold off;
+    title('Variance^2 compared to number of molecules',...
+        'FontWeight','bold')
+    xlabel('Number of molecules')
+    ylabel('Variance^2')
+    legend('Simulation without PSF','Fit')
+    text(100,4*10^-6,k);
+    q=sprintf('The R^2 is: %d', R2wopsf(1,2));
+    text(100,3.5*10^-6,q);
     saveas(gcf, 'TestIntensity.fig')
+    
+    save('TestIntensity','-append','pairpsf','pairwopsf')
 end
