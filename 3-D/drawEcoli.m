@@ -127,10 +127,8 @@ function imgls=draw(img,num,l,r,s)
         if i<=r/2
             n1=i-1;
             [x,y] = spherocylinder(xc, yc, r/(r/n1), l/(r/n1),0,s); 
-            i
         else
             n2=r-i;
-            n2
             [x,y] = spherocylinder(xc, yc, r/(r/n2), l/(r/n2),0,s); 
         end
         
@@ -144,7 +142,7 @@ function imgls=draw(img,num,l,r,s)
         else
             img{i}=sparse(imfill(full(img{i}),'holes'));
         end
-        figure(i);imagesc(img{i});axis equal;
+        %figure(i);imagesc(img{i});axis equal;
     end
     imgls={img,redo};
 end
