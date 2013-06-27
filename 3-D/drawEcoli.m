@@ -118,25 +118,33 @@ function imgls=draw(img,num,l,r,s)
 %%Draws the cells. Takes the image and num, a cell with the coordinate pair 
 %%in the first cell and the angles in the second. If redraw needed, it
 %%returns a 1.
-    xc=l;
-    yc=r;
-    zc=r;
-    [x,y,z]=ellipsoid(xc,yc,zc,l,r,r,s);
-    
-    x=round(x);
-    y=round(y);
-    z=round(z);
-
-    bi=img;
+    xc=r+1;
+    yc=l;
     redo=0;
-    img=checkShape(img,{x,y,z});
-    if img{1}==0
-        redo=1;
-        img=bi;
-    else
-        for p=1:length(img)
-            img{p}=sparse(imfill(full(img{p}),'holes'));
+    r=r*2;
+    l=l*2;
+    for i=1:r
+        if i<=r/2
+            n1=i-1;
+            [x,y] = spherocylinder(xc, yc, r/(r/n1), l/(r/n1),0,s); 
+            i
+        else
+            n2=r-i;
+            n2
+            [x,y] = spherocylinder(xc, yc, r/(r/n2), l/(r/n2),0,s); 
         end
+        
+        x=round(x);
+        y=round(y);
+        bi=img{i};
+        img{i}=checkShape(img{i},[y,x]);
+        if img{i}==0
+            redo=1;
+            img{i}=bi;
+        else
+            img{i}=sparse(imfill(full(img{i}),'holes'));
+        end
+        figure(i);imagesc(img{i});axis equal;
     end
     imgls={img,redo};
 end
@@ -146,47 +154,39 @@ function img=checkShape(img, pts)
 %%overlapping with another cell. If it is, it returns 0. Takes the image 
 %%and pts, coordinate pairs about the location of the cells
 
-    n=0;
-    imsize=size(img{1},1);
-    x=pts{1};
-    y=pts{2};
-    z=pts{3};
-%     for i=1:size(x,1)
-%         for j=1:size(x,1)
-%             if x(i,j)+1 == 0 || y(i,j)+1 == 0 || z(i,j)+1==0 %exceeds the bounds of the image
-%                 n=n+1;
-%             elseif x(i,j)+1 >= imsize || y(i,j)+1 >= imsize || z(i,j)+1>=imsize %exceeds the bounds of the image
-%                 n=n+1;
-%             end
-%         end
-%     end
-
-    
-    %funtion that transfers coord over for 3d
-    for j=1:size(z,1)
-        for e=1:size(z,1)
-            img{z(j,e)+1}(x(j,e)+1,y(j,e)+1)=1;
+   n=0;
+    t=size(img);
+    imsize=t(1);
+    for pt = pts'
+        x=pt(1);
+        y=pt(2);
+        if x == 0 || y == 0 %exceeds the bounds of the image
+            n=n+1;
+        elseif x >= imsize || y >= imsize %exceeds the bounds of the image
+            n=n+1;
         end
-    end 
+    end
     
-%     if n==0
-%         A = uint16(zeros(imsize,imsize));
-%         for pair = pts'
-%             if pair(1)~=0 && pair(2)~=0 && pair(1)<imsize && pair(2)<imsize
-%                 A(pair(1),pair(2)) = 1;
-%             end
-%         end
-%         b = img(A==1);
-%         s= sum(b);
-%         if s>0
-%             'There is overlap!';
-%         end
-%         
-%         img(A==1) = 1;
-% 
-%     end
-%     
-    if n>0
-        img{1}=0;
+    if n==0
+        A = uint16(zeros(imsize,imsize));
+        for pair = pts'
+            if pair(1)~=0 && pair(2)~=0 && pair(1)<imsize && pair(2)<imsize
+                A(pair(1),pair(2)) = 1;
+            end
+        end
+        b = img(A==1);
+        s= sum(b);
+        if s>0
+            'There is overlap!';
+        end
+        
+        img(A==1) = 1;
+
+
+    end
+
+
+    if n>0 || s>0
+        img=0;
     end
 end

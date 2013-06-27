@@ -1,0 +1,2 @@
+testIntensity()
+testWalk()
