@@ -48,25 +48,25 @@ function imgdata=psf(imgdata,varargin)
   end
   
     
-    for i=1:length(img)
-    %matrix of the gaussian filter's kernal
-        if sum(sum(img{i}))>0
-            n=n+1;
-            h=size(img{i},1);
-            l=size(img{i},2);
-            if h>l
-                ms=[h*2,h*2];
-            else
-                ms=[l*2 l*2];
-            end
-            p=img{i};
-            RO{n}=i;
-            
-            f=fspecial('gaussian',ms,s);
-            img2=imfilter(full(p),f);
-
-            img{i}=img2*10000;
-        end
-    end
+%     for i=1:length(img)
+%     %matrix of the gaussian filter's kernal
+%         if sum(sum(img{i}))>0
+%             n=n+1;
+%             h=size(img{i},1);
+%             l=size(img{i},2);
+%             if h>l
+%                 ms=[h*2,h*2];
+%             else
+%                 ms=[l*2 l*2];
+%             end
+%             p=img{i};
+%             RO{n}=i;
+%             
+%             f=fspecial('gaussian',ms,s);
+%             img2=imfilter(full(p),f);
+% 
+%             img{i}=img2*10000;
+%         end
+%     end
     imgdata={img, imgdata{2},RO};
 end
