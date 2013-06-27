@@ -4,8 +4,7 @@ function testIntensity()
     close all
     ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
     addpath(ip);
-%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   load('TestIntensity.mat')
-    imgnum=100;
+    imgnum=10;
     
     % Default values
     numofcells=1;
@@ -16,7 +15,7 @@ function testIntensity()
     l=2000; %nm
 
     %The number of molecules to measure
-    lsofnumofmol=round(linspace(50,200,imgnum));
+    lsofnumofmol=round(linspace(50,400,imgnum));
     sizeofmol=1; % This number is represnetative of the nm of molecule
     % per molecule
 
