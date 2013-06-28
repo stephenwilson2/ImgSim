@@ -66,47 +66,29 @@ end
 function pts=rnaodna(ori,len,height,size,cell)
     u(1:len,1:height)=0;
     for i=1:size
+        %brings the pt back into cell if it gets out
         while cell(ori(1),ori(2))==0 && ori(2)>height/2
             ori(2)=ori(2)-1;
         end
         while cell(ori(1),ori(2))==0 && ori(2)<height/2
             ori(2)=ori(2)+1;
         end
-        if  ori(1)==1
-            ori(1)=ori(1)+1;
-        elseif ori(2)==1
-            ori(2)=ori(2)+1;
 
-
-        elseif ori(2)==height-1
-            ori(2)=ori(2)-1;
-        elseif ori(1)==len-1
-            ori(1)=ori(1)-1;
-        end
-        
-        x=randi([1 4]);
-        if  x==1 
-            ori(1)=ori(1)+1;
-        elseif x==2
-            ori(2)=ori(2)+1;
-
-
-        elseif x==3 
-            ori(2)=ori(2)-1;
-        elseif x==4
-            ori(1)=ori(1)-1;
-
-
-        elseif ori(1)==1
-            ori(1)=ori(1)+1;
-        elseif ori(2)==1
-            ori(2)=ori(2)+1;
-
-
-        elseif ori(2)==len
-            ori(2)=ori(2)-1;
-        elseif ori(1)==height
-            ori(1)=ori(1)-1;     
+        z=1;
+        while z==1
+            z=0;
+            x=randi([1 4]);
+            if  x==1 && ori(1)~=len-1
+                ori(1)=ori(1)+1;
+            elseif x==2 && ori(2)~=height-1
+                ori(2)=ori(2)+1;
+            elseif x==3 && ori(2)~=1
+                ori(2)=ori(2)-1;
+            elseif x==4 && ori(1)~=1
+                ori(1)=ori(1)-1;
+            else
+                z=1;
+            end 
         end
         u(ori(1),ori(2))=u(ori(1),ori(2))+100;
     end

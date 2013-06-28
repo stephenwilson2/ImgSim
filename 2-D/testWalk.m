@@ -5,7 +5,7 @@ function testWalk()
     clear all;
     close all;
     try
-        load('RandomWalkData')
+        load('RandomWalkData3')
     catch
         
         %Define the height and length of the cells here in nanometers
@@ -15,7 +15,7 @@ function testWalk()
         %The number of molecules to measure
         
         datapts=100;
-        numofRgs=300;
+        numofRgs=30;
         
         numofmol=1;
         L=linspace(10,300,numofRgs); % This number is contour length in nm
@@ -96,10 +96,10 @@ function testWalk()
     end
     
     pe=polyfit(L,X,1);
-    k1=sprintf('The slope is: %d', pe(1));
+
     
     pa=polyfit(L,Rgs,1);
-    k2=sprintf('The slope is: %d', pa(1));
+  
     yfita = polyval(pa,L);
     
     
@@ -108,14 +108,14 @@ function testWalk()
     plot(L,X);
     plot(L,Rgs,'color','red');
     plot(L,yfita,'color','red');
-    title('Rotation of Gyration versus the Contour Length of Polymer',...
+    title('Radius of Gyration versus the Contour Length of Polymer',...
         'FontWeight','bold')
     xlabel('Countour Length (nm)')
-    ylabel('Rotation of Gyration (nm^2)')
-    exp=sprintf('Expected-slope: %d',k1);
-    act=sprintf('Actual Linear Fit-slope: %d',k2);
+    ylabel('Radius of Gyration (nm^2)')
+    exp=sprintf('Expected-slope: %d',pe(1));
+    act=sprintf('Actual Linear Fit-slope: %d',pa(1));
     legend(exp,'Actual',act)
     saveas(gcf, 'TestRandomWalk.fig')
     
-    save('RandomWalkData')
+    save('RandomWalkData3')
 end
