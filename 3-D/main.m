@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=10;
+nmperpixel=1;
 
 %Define the height and length of the cells here in nanometers
 r=250; %nm
@@ -74,9 +74,12 @@ tic
 imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
 toc
 
-% img=imgdata{1};
+
+img=imgdata{1};
 % for p=1:length(img)
-%     figure(p*10);imagesc(img{p});
+%     if sum(sum(img{p}))>0
+%         figure(p*10);imagesc(img{p});
+%     end
 % end
 
 tic
@@ -85,13 +88,14 @@ toc
 
 
 img=imgdata{1};
-n=imgdata{3};
+save('main2','imgdata','-v7.3')
 
-for k=1:length(n)
-    if n{k}~=0
-        figure(n{k});imagesc(img{n{k}});
+for k=1:length(img)
+    if sum(sum(img{k}))>0
+        figure(k);imagesc(img{k});
     end
 end
+
 
 % for p=1:length(img)
 %       figure(p);imagesc(img{p});

@@ -59,11 +59,6 @@ function pts=rnaodna(x,y,len,height,size,cell,z)
     ls{length(cell)}=[];
     u(1:len,1:height)=0;
     for i=1:size
-        if z==1
-            z=z+1;
-        elseif z==height
-            z=z-1;
-        end
         
         while cell{z}(x,y)==0 && y>height/2
             y=y-1;
@@ -72,33 +67,44 @@ function pts=rnaodna(x,y,len,height,size,cell,z)
             y=y+1;
         end
         
-        if  x==1
-            x=x+1;
-        elseif y==1
-            y=y+1;
-
-        elseif y==height-1
-            y=y-1;
-        elseif x==len-1
-            x=x-1;
+%         if z==1
+%             z=z+1;
+%         elseif z==height
+%             z=z-1;
+%         end
+%         
+%         if  x==1
+%             x=x+1;
+%         elseif y==1
+%             y=y+1;
+% 
+%         elseif y==height-1
+%             y=y-1;
+%         elseif x==len-1
+%             x=x-1;
+%         end
+        in=0;
+        while in==0
+            in=1;
+            o=randi([1 6]);
+            if  o==1 && x~=len
+                x=x+1;
+            elseif o==2 && y~=height
+                y=y+1;
+            elseif o==3 && z~=height
+                z=z+1;
+                
+            elseif o==4 && y~=1
+                y=y-1;
+            elseif o==5 && x~=1
+                x=x-1;
+            elseif o==6 && z~=1
+                z=z-1;
+            else
+                in=0;
+            end
         end
         
-        o=randi([1 6]);
-        if  o==1 
-            x=x+1;
-        elseif o==2
-            y=y+1;
-        elseif o==3
-            z=z+1;
-            
-        elseif o==4 
-            y=y-1;
-        elseif o==5
-            x=x-1;
-        elseif o==6
-            z=z-1;
-            
-        end
         u(x,y)=u(x,y)+10;
         ls{z}=u;
     end
