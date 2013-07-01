@@ -7,6 +7,8 @@ addpath(ip);
 % Default values
 numofcells=1;
 nmperpixel=1;
+numofslice=8; %%%%even only!
+numofslice=2*round(numofslice/2);
 
 %Define the height and length of the cells here in nanometers
 r=250; %nm
@@ -41,61 +43,62 @@ fluorvarz=num/de;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
 
-steps=2000; %Calculated of nmperpixel and cell size
+steps=20000; %Calculated of nmperpixel and cell size
 
 %Sets the image size according to the number of cells and the cell size
 if r>l
-    imgsize=2*r*numofcells;
+    imgsize=2*r*numofcells*1.3;
 else
-    imgsize=2*l*numofcells;
+    imgsize=2*l*numofcells*1.3;
 end
 
 k={};
 for i=1:r*2
-    k{i}=sparse(imgsize,r*2+1);
+    k{i}=sparse(round(imgsize),round((r*2+1)*2));
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-try 
-    load('main.mat')
+try
+    load('main2')
 catch
-    tic
-    imgdata=drawEcoli(k,numofcells,r,l,steps,'no');
-    toc
-    save('main','imgdata')
-end
-% img=imgdata{1};
-% for p=1:length(img)/2
-%     figure(p);imagesc(img{p});
-%     axis equal;
-% end
-
-tic
-imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
-toc
-
-
-img=imgdata{1};
-% for p=1:length(img)
-%     if sum(sum(img{p}))>0
-%         figure(p*10);imagesc(img{p});
-%     end
-% end
-
-tic
-imgdata=psf(imgdata,fluorvar,fluorvarz);
-toc
-
-
-img=imgdata{1};
-save('main2','imgdata','-v7.3')
-
-for k=1:length(img)
-    if sum(sum(img{k}))>0
-        figure(k);imagesc(img{k});
+    try
+        load('main')
+    catch
+        tic
+        imgdata=drawEcoli(k,numofcells,r,l,steps,'no');
+        toc
+        save('main','-v7.3','imgdata')
     end
+    
+    tic
+    imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+    toc
+    
+    
+    tic
+    imgdata=psfz(imgdata,fluorvarz);
+    toc
+
+
+    
+    im{numofslice}=[];
+    n=0;
+    slices=round(linspace(1,500,numofslice));
+    for slice=slices
+        n=n+1;
+        imgdata=psfplane(imgdata,slice,fluorvar);
+        im{n}=imgdata{1}{slice};
+    end
+    
+    save('main2','-v7.3','imgdata','im','numofslice')
 end
 
+IM=[];
+for i=1:length(im)-numofslice/2
+    tmp=[im{i};im{i+numofslice/2}];
+    IM=[IM tmp];
+end
+figure(121); imagesc(IM);
 
 % for p=1:length(img)
 %       figure(p);imagesc(img{p});

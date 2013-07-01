@@ -118,8 +118,8 @@ function imgls=draw(img,num,l,r,s)
 %%Draws the cells. Takes the image and num, a cell with the coordinate pair 
 %%in the first cell and the angles in the second. If redraw needed, it
 %%returns a 1.
-    xc=r+1;
-    yc=l;
+    xc=(r+1)*2;
+    yc=l*1.3;
     redo=0;
     r=r*2;
     l=l*2;
