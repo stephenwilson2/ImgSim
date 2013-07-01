@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=1;
+nmperpixel=64;
 numofslice=8; %%%%even only!
 numofslice=2*round(numofslice/2);
 
@@ -14,11 +14,11 @@ numofslice=2*round(numofslice/2);
 r=250; %nm
 l=1000; %nm
 
-r=r/nmperpixel;
-l=l/nmperpixel;
+r=round(r/nmperpixel);
+l=round(l/nmperpixel);
 
 %The number of molecules to measure
-numofmol=2;
+numofmol=100;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -38,7 +38,8 @@ de=(6^.5)*n*k*(4*power(cos(a),5)-25*power(cos(a),7/2)+42*power(cos(a),5/2)...
     -25*power(cos(a),3/2)+4)^.5;
 fluorvarz=num/de;
 
-
+fluorvar=fluorvar/nmperpixel;
+fluorvarz=fluorvarz/nmperpixel;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Scaling
@@ -74,7 +75,6 @@ catch
     imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
     toc
     
-    
     tic
     imgdata=psfz(imgdata,fluorvarz);
     toc
@@ -82,44 +82,41 @@ catch
 
     
     im{numofslice}=[];
+    mask{numofslice}=[];
     n=0;
-    slices=round(linspace(1,500,numofslice));
+    slices=round(linspace(1,r*2,numofslice));
     for slice=slices
         n=n+1;
         imgdata=psfplane(imgdata,slice,fluorvar);
         im{n}=imgdata{1}{slice};
+        mask{n}=imgdata{2}{slice};
     end
     
-    save('main2','-v7.3','imgdata','im','numofslice')
+    save('main2','-v7.3','imgdata','im','numofslice','mask')
 end
-figure(121);
+
+
 IM=[];
-set(121, 'Units','normalized')
+Mask=[];
+
+for i=1:length(mask)-numofslice/2
+    tmp=[mask{i}*100;mask{i+numofslice/2}*100];
+    Mask=[Mask tmp];
+end
+
 for i=1:length(im)-numofslice/2
     tmp=[im{i};im{i+numofslice/2}];
     IM=[IM tmp];
-    s=sprintf('%i',i)
-    s2=sprintf('%i',i+numofslice/2)
-    text(size(im{i},1)*i,size(im{i},2)*2, s)
-    text(size(im{i},1)*i,size(im{i},2), s2)
 end
-imagesc(IM);
+IM=ovlay(Mask, IM);
+figure(121);
+imagesc(IM); axis equal;
+slices=round(linspace(1,r*2,numofslice));
+for i=1:length(im)-numofslice/2
+    s=sprintf('z=%i nm',slices(i)*nmperpixel);
+    s2=sprintf('z=%i nm',slices(i+numofslice/2)*nmperpixel);
+    text(size(im{i},1)/2*i-size(im{i},1)/2,0-size(IM,2)/15, s, 'FontSize',18);
+    text(size(im{i},1)/2*i-size(im{i},1)/2,size(IM,2)+size(IM,2)/10, s2, 'FontSize',18);
+end
 
-% for p=1:length(img)
-%       figure(p);imagesc(img{p});
-% end
-
-%    
-%     
-%     tic
-%     graph(imgdata)
-%     toc
-    
-%     tic
-%     imgdata=coarsen(imgdata,nmperpixel,64);
-%     toc
-%     
-%     tic
-%     graph(imgdata)
-%     toc
-% end
+delete('main.mat','main2.mat')

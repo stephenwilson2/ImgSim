@@ -43,6 +43,6 @@ function imgdata=psfplane(imgdata,plane,varargin)
         toc
         img{plane}=img2*1000;
     end
-    imgdata={img, imgdata{2}};
+    imgdata={img, imgdata{2},imgdata{3},imgdata{4}};
 end
     

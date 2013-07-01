@@ -3,6 +3,7 @@ function imgdata=populateMolecules(imgdata,varargin)
 
     %Extract data about image
     img=imgdata{1};
+    mask=img;
  
     dim=imgdata{2};
         len=dim{1}*2;
@@ -28,32 +29,41 @@ function imgdata=populateMolecules(imgdata,varargin)
     num = cell2mat(optargs(1));
     sz = cell2mat(optargs(2));
 
-
+    ls_xy=[];
+    ls_z=[];
     for n=1:num
         x=randi([1 (len-1)]);
         y=randi([1 (r-1)]);
         z=randi([1 (r-1)]);
+        
         while img{z}(x,y)==0
-            x=randi([1 (len-1)]);
-            y=randi([1 (r-1)]);
+            [row, col]=find(img{z});
+            x=randi([1 (length(row))]);
+            y=randi([1 (length(col))]);
+            x=row(x);
+            y=col(y);
         end
         xy=[x,y];
+        ls_xy=[ls_xy; xy];
+        ls_z=[ls_z; z];
         rna=rnaodna(x,y,len,r,sz,img,z);
         for m=1:length(img)
-            img{m}(rna{m}>0)=rna{m}(rna{m}>0);
+            if sum(sum(rna{m}))>0
+                img{m}(rna{m}>0)=rna{m}(rna{m}>0);
+            end
         end
     end
     for m=1:length(img) % gets rid of the cell mask
         img{m}(img{m}==1)=0;
     end
-    
-    
-    imgdata={img,dim};
+
+    imgdata={img,mask,dim,ls_xy,ls_z};
 end
-function pts=rnaodna(x,y,len,height,size,cell,z)
+function pts=rnaodna(x,y,len,height,siz,cell,z)
     ls{length(cell)}=[];
-    u(1:len,1:height)=0;
-    for i=1:size
+    u(1:size(cell{1},1),1:size(cell{1},2))=0;
+
+    for i=1:siz
         
         while cell{z}(x,y)==0 && y>height/2
             y=y-1;

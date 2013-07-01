@@ -36,23 +36,29 @@ function imgdata=psfz(imgdata,varargin)
     
     f=fspecial('gaussian',ms,s);
     
-    for i=1:length(img)
+    for e=1:length(img)
+        tmp{e}=zeros(size(img{e}));
+    end
+    
+    for i=1:length(img) % per z plane
     %matrix of the gaussian filter's kernal
         if sum(sum(img{i}))>0
             su=ceil(sum(sum(img{i}))/10);
-            su
+
             if h<l
                 p=zeros(su,h);
   
             else
                 p=zeros(su,l);
             end
-            whos p;
+
             [row,col,v]=find(img{i});
-            for o=1:su
+ 
+            for o=1:length(v)
+ 
                 p(o,i)=v(o)*1000;
                 img2=imfilter(p(o,:),f);
-       
+                
                 for m=1:length(p)
                     tmp{m}(row, col)=round(img2(m));
                 end
@@ -69,5 +75,5 @@ function imgdata=psfz(imgdata,varargin)
     end   
 
     
-    imgdata={img, imgdata{2}};
+    imgdata={img, imgdata{2},imgdata{3},imgdata{4}};
 end
