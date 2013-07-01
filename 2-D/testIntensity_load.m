@@ -20,7 +20,7 @@
         'FontWeight','bold')
     xlabel('Number of molecules')
     ylabel('Variance')
-    legend('Simulation with PSF','Fit')
+
     n1=sprintf('Fit-Slope: %d, R^2: %d', p(1),R2psf(1,2));
     legend('Simulation with PSF',n1)
     
@@ -39,9 +39,8 @@
         'FontWeight','bold')
     xlabel('Number of molecules')
     ylabel('Variance')
-    legend('Simulation without PSF','Fit')
 
     n1=sprintf('Fit-Slope: %d, R^2: %d', p(1),R2wopsf(1,2));
-    legend('Simulation with PSF',n1)
+    legend('Simulation without PSF',n1)
 
     saveas(gcf, 'TestIntensityLin.fig')

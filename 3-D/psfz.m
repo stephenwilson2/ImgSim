@@ -29,9 +29,9 @@ function imgdata=psfz(imgdata,varargin)
     s = cell2mat(optargs(1));
  
     if h<l
-        ms=[1,h*2];
+        ms=[1,h*2*2];
     else
-        ms=[1, l*2];
+        ms=[1, l*2*2];
     end
     
     f=fspecial('gaussian',ms,s);
@@ -52,14 +52,15 @@ function imgdata=psfz(imgdata,varargin)
                 p=zeros(su,l);
             end
 
+
             [row,col,v]=find(img{i});
- 
+
             for o=1:length(v)
- 
+
                 p(o,i)=v(o)*1000;
                 img2=imfilter(p(o,:),f);
-                
-                for m=1:length(p)
+
+                for m=1:size(p,1)
                     tmp{m}(row, col)=round(img2(m));
                 end
                 

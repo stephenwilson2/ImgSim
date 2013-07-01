@@ -63,7 +63,7 @@ end
 %delete('TestRandomOrigins.mat');
 
 xz=[molx,molz];
-yz=[molx,molz];
+yz=[moly,molz];
 
 xz=sortrows(xz);
 yz=sortrows(yz);
@@ -95,7 +95,7 @@ hold on;
 
 expect(1:datapts*numofmol)=0;
 for w=1:datapts*numofmol
-    expect(w)=sum(cell{xz(w,2)}(xz(w,1),:))/sum(sum(cell{xz(w,2)}))/3; % not right
+    expect(w)=sum(cell{xz(w,2)}(xz(w,1),:))/sum(sum(cell{xz(w,2)})); % not right
 end
 expect=expect';
 expect=[xz(:,1),expect];
@@ -111,17 +111,16 @@ saveas(gcf, 'testhistx.fig')
 
 expect=[];
 figure(3);
-[f3,x3]=hist(moly,min(moly):1:max(moly));
+[f3,x3]=hist(yz(:,1),min(yz(:,1)):1:max(yz(:,1)));
 bar(x3,f3/trapz(x3,f3))
 hold on;
-moly=sort(moly);
 
 expect(1:datapts*numofmol,1)=0;
 for w=1:datapts*numofmol
-    expect(w)=(sum(cell{yz(w,2)}(:,moly(w))/sum(sum(cell{yz(w,2)}))))/3; % not right
+    expect(w)=sum(cell{yz(w,2)}(:,yz(w,1)))/sum(sum(cell{yz(w,2)})); % not right
 end
 
-expect=[moly ,expect];
+expect=[yz(:,1) ,expect];
 plot(expect(:,1),expect(:,2),'color','red')
 hold off;
 title('Distribution of a Large Number of Randomly Chosen Y-values',... 
