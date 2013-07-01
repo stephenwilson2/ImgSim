@@ -7,7 +7,7 @@ function imgdata=populateMolecules(imgdata,varargin)
     dim=imgdata{2};
         len=dim{1}*2;
         r=dim{2}*2;
-
+        
         
     %Default values
     num = 5; % copies of molecules
@@ -28,30 +28,25 @@ function imgdata=populateMolecules(imgdata,varargin)
     num = cell2mat(optargs(1));
     sz = cell2mat(optargs(2));
 
-%     for i=1:length(cells)
+
     for n=1:num
         x=randi([1 (len-1)]);
         y=randi([1 (r-1)]);
         z=randi([1 (r-1)]);
-        
-%         cell=cells{i};
         while img{z}(x,y)==0
             x=randi([1 (len-1)]);
             y=randi([1 (r-1)]);
         end
         xy=[x,y];
-        rna=rnaodna(x,y,len,r,sz,img,z);%,cells{i});
+        rna=rnaodna(x,y,len,r,sz,img,z);
         for m=1:length(img)
             img{m}(rna{m}>0)=rna{m}(rna{m}>0);
         end
     end
-    for m=1:length(img)
+    for m=1:length(img) % gets rid of the cell mask
         img{m}(img{m}==1)=0;
     end
     
-
-
-%     end
     
     imgdata={img,dim};
 end
@@ -67,22 +62,6 @@ function pts=rnaodna(x,y,len,height,size,cell,z)
             y=y+1;
         end
         
-%         if z==1
-%             z=z+1;
-%         elseif z==height
-%             z=z-1;
-%         end
-%         
-%         if  x==1
-%             x=x+1;
-%         elseif y==1
-%             y=y+1;
-% 
-%         elseif y==height-1
-%             y=y-1;
-%         elseif x==len-1
-%             x=x-1;
-%         end
         in=0;
         while in==0
             in=1;

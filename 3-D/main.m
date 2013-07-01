@@ -18,7 +18,7 @@ r=r/nmperpixel;
 l=l/nmperpixel;
 
 %The number of molecules to measure
-numofmol=1;
+numofmol=2;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -54,7 +54,7 @@ end
 
 k={};
 for i=1:r*2
-    k{i}=sparse(round(imgsize),round((r*2+1)*2));
+    k{i}=sparse(round(imgsize),round((r*2+1)*2.5));
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -92,18 +92,22 @@ catch
     
     save('main2','-v7.3','imgdata','im','numofslice')
 end
-
+figure(121);
 IM=[];
+set(121, 'Units','normalized')
 for i=1:length(im)-numofslice/2
     tmp=[im{i};im{i+numofslice/2}];
     IM=[IM tmp];
+    s=sprintf('%i',i)
+    s2=sprintf('%i',i+numofslice/2)
+    text(size(im{i},1)*i,size(im{i},2)*2, s)
+    text(size(im{i},1)*i,size(im{i},2), s2)
 end
-figure(121); imagesc(IM);
+imagesc(IM);
 
 % for p=1:length(img)
 %       figure(p);imagesc(img{p});
 % end
-
 
 %    
 %     

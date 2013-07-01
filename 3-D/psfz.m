@@ -21,49 +21,51 @@ function imgdata=psfz(imgdata,varargin)
     % Checks to ensure  1 optional inputs at most
     numvarargs = length(varargin);
     if numvarargs > 1
-        error('Takes at most 1 optional inputs');
+        error('Takes at most 1 optional input');
     end
     
     % Overwrites defaults if optional input exists
     optargs(1:numvarargs) = varargin;
     s = cell2mat(optargs(1));
  
+    if h<l
+        ms=[1,h*2];
+    else
+        ms=[1, l*2];
+    end
+    
+    f=fspecial('gaussian',ms,s);
     
     for i=1:length(img)
     %matrix of the gaussian filter's kernal
         if sum(sum(img{i}))>0
             su=ceil(sum(sum(img{i}))/10);
+            su
             if h<l
                 p=zeros(su,h);
+  
             else
                 p=zeros(su,l);
             end
-            
-            if h<l
-                ms=[su,h*2];
-            else
-                ms=[su, l*2];
-            end
-            
-            f=fspecial('gaussian',ms,s);
-            
-            
+            whos p;
             [row,col,v]=find(img{i});
             for o=1:su
                 p(o,i)=v(o)*1000;
-            end          
-            img2=imfilter(p,f);
-
-            for o=1:length(img)
-                tmp{o}(row, col)=round(img2(o));%% adjust for multiple mol
+                img2=imfilter(p(o,:),f);
+       
+                for m=1:length(p)
+                    tmp{m}(row, col)=round(img2(m));
+                end
+                
             end
         end
     end
     for m3=1:length(img)
-        [row,col,v]=find(tmp{m3});
-        if v>0
-            img{m3}(row,col)=v;
-        end
+        img{m3}(tmp{m3}>0)=tmp{m3}(tmp{m3}>0);
+%         [row,col,v]=find(tmp{m3});
+%         if v>0
+%             img{m3}(row,col)=v(;
+%         end
     end   
 
     
