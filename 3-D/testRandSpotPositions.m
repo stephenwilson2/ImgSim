@@ -74,7 +74,7 @@ figure(1);
 bar(x,f/trapz(x,f))
 hold on;
 molz=sort(molz);
-expect(1:datapts*numofmol,1)=1/datapts;
+expect(1:datapts*numofmol,1)=1/datapts; %not right
 
 expect=[molz ,expect];
 
@@ -89,28 +89,24 @@ saveas(gcf, 'testhistz.fig')
 
 expect=[];
 figure(2);
-[f2,x2]=hist(molx,min(molx):1:max(molx));
+[f2,x2]=hist(xz(:,1),min(xz(:,1)):1:max(xz(:,1)));
 bar(x2,f2/trapz(x2,f2))
 hold on;
-molx=sort(molx);
 
 expect(1:datapts*numofmol)=0;
 for w=1:datapts*numofmol
-    expect(w)=(sum(cell{xz(w,2)}(molx(w),:)/sum(sum(cell{xz(w,2)}))));
+    expect(w)=sum(cell{xz(w,2)}(xz(w,1),:))/sum(sum(cell{xz(w,2)}))/3; % not right
 end
 expect=expect';
-expect=[molx ,expect];
-plot(expect(:,1),expect(:,2),'color','red')
+expect=[xz(:,1),expect];
+
+plot(expect(:,1),expect(:,2),'-r')
 hold off;
 title('Distribution of a Large Number of Randomly Chosen X-values',... 
   'FontWeight','bold')
 xlabel('X (nm)')
 ylabel('Probability')
 saveas(gcf, 'testhistx.fig')
-
-
-
-
 
 
 expect=[];
@@ -122,7 +118,7 @@ moly=sort(moly);
 
 expect(1:datapts*numofmol,1)=0;
 for w=1:datapts*numofmol
-    expect(w)=(sum(cell{yz(w,2)}(:,moly(w))/sum(sum(cell{yz(w,2)}))));
+    expect(w)=(sum(cell{yz(w,2)}(:,moly(w))/sum(sum(cell{yz(w,2)}))))/3; % not right
 end
 
 expect=[moly ,expect];
