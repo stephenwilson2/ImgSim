@@ -70,7 +70,7 @@ yz=sortrows(yz);
 
 expect=[];
 figure(1);
-[f,x]=hist(molz,min(molz):1:max(molz));
+[f,x]=hist(molz,min(molz):5:max(molz));
 bar(x,f/trapz(x,f))
 hold on;
 molz=sort(molz);
@@ -89,7 +89,7 @@ saveas(gcf, 'testhistz.fig')
 
 expect=[];
 figure(2);
-[f2,x2]=hist(xz(:,1),min(xz(:,1)):1:max(xz(:,1)));
+[f2,x2]=hist(xz(:,1),min(xz(:,1)):5:max(xz(:,1)));
 bar(x2,f2/trapz(x2,f2))
 hold on;
 
@@ -111,7 +111,7 @@ saveas(gcf, 'testhistx.fig')
 
 expect=[];
 figure(3);
-[f3,x3]=hist(yz(:,1),min(yz(:,1)):1:max(yz(:,1)));
+[f3,x3]=hist(yz(:,1),min(yz(:,1)):5:max(yz(:,1)));
 bar(x3,f3/trapz(x3,f3))
 hold on;
 

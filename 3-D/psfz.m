@@ -10,6 +10,7 @@ function imgdata=psfz(imgdata,varargin)
     %Default values
     s=80; % size of fluorescence (in terms of gaussian varience)
 
+
     img=imgdata{1};
     h=size(img{1},1);
     l=size(img{2},2);
@@ -29,38 +30,38 @@ function imgdata=psfz(imgdata,varargin)
     s = cell2mat(optargs(1));
  
     if h<l
-        ms=[1,h*2*2];
+        ms=[h*4,1];
     else
-        ms=[1, l*2*2];
+        ms=[l*4,1];
     end
     
     f=fspecial('gaussian',ms,s);
-    
+    size(f)
     for e=1:length(img)
         tmp{e}=zeros(size(img{e}));
     end
     
     for i=1:length(img) % per z plane
+
     %matrix of the gaussian filter's kernal
         if sum(sum(img{i}))>0
             su=ceil(sum(sum(img{i}))/10);
-
+ 
             if h<l
                 p=zeros(su,h);
   
             else
                 p=zeros(su,l);
             end
-
-
+            
             [row,col,v]=find(img{i});
-
             for o=1:length(v)
-
                 p(o,i)=v(o)*1000;
+                size(p),size(v)
+                i
                 img2=imfilter(p(o,:),f);
-
-                for m=1:size(p,1)
+                size (img2)
+                for m=1:length(p)
                     tmp{m}(row, col)=round(img2(m));
                 end
                 
@@ -74,6 +75,7 @@ function imgdata=psfz(imgdata,varargin)
 %             img{m3}(row,col)=v(;
 %         end
     end   
+
 
     
     imgdata={img, imgdata{2},imgdata{3},imgdata{4}};

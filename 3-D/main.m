@@ -6,7 +6,7 @@ addpath(ip);
 
 % Default values
 numofcells=1;
-nmperpixel=64;
+nmperpixel=1;
 numofslice=8; %%%%even only!
 numofslice=2*round(numofslice/2);
 
@@ -18,7 +18,7 @@ r=round(r/nmperpixel);
 l=round(l/nmperpixel);
 
 %The number of molecules to measure
-numofmol=100;
+numofmol=200;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
