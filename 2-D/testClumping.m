@@ -53,7 +53,7 @@ function testClumping ()
     fprintf('%s\n', 'Drawing mask');
 
     tic
-    imgdata=drawEcoli(k,numofcells,l,h,steps,'no');
+    imgdata=drawEcoli(k,numofcells,l,h,steps,'no',angle,shape);
     toc
     tmpimgdata=imgdata;
     if length(imgdata)>1

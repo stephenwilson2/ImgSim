@@ -8,6 +8,7 @@ function imgdata=drawEcoli (img,varargin)
 %                     cells and ~2000 for large cells)*
 %                   6)use random origins keep blank or fix the origins:
 %                     'fix'*
+%                   7)give a number between 0 and 180 for the angle
 %                   * denotes optional input
 %          output: 
 %                   1)the cell mask, 16-bit image matrix
@@ -17,24 +18,24 @@ function imgdata=drawEcoli (img,varargin)
 %                   5)the cells
 
 
-
-
     %Default values
     num = 5;
     len = 10;
     height = 30;
     steps = 1000;
     fix='no';
+    angle=360;
+    shape='sc';
     t=size(img);
     imsize=t(1);
     
     % Sets defaults for optional inputs
     optargs = {num,height,len,steps,fix};
     
-    %Checks to ensure  3 optional inputs at most
+    %Checks to ensure  7 optional inputs at most
     numvarargs = length(varargin);
-    if numvarargs > 5
-        error('Takes at most 5 optional inputs');
+    if numvarargs > 7
+        error('Takes at most 7 optional inputs');
     end
     
     % Overwrites defaults if optional input exists
@@ -44,6 +45,8 @@ function imgdata=drawEcoli (img,varargin)
     height = cell2mat(optargs(2));
     steps = cell2mat(optargs(4));
     fix = cell2mat(optargs(5));
+    angle= cell2mat(optargs(6));
+    shape= cell2mat(optargs(7));
     
     % Fixes or randomizes the locations of the cells
     
@@ -51,9 +54,13 @@ function imgdata=drawEcoli (img,varargin)
         n=[0 0];
         while n(1)<num
             randpair=randi([1 imsize],1,2); %gets a random origin for a cell
-            ang = randi([90 180],1,1);
+            if angle==360;
+                ang = randi([90 180],1,1);
+            else
+                ang=angle;
+            end
             q={randpair, ang};
-            imgls=draw(img,q,len,height,steps);
+            imgls=draw(img,q,len,height,steps,shape);
             img=imgls{1};
             if imgls{2}~=1 && n(1)==0
                 w=randpair;
@@ -79,7 +86,7 @@ function imgdata=drawEcoli (img,varargin)
         while n(1)<num && i<floor(num+f)
             i=i+1;
             q={randpair(i,:), ang(i)};
-            imgls=draw(img,q,len,height,steps);
+            imgls=draw(img,q,len,height,steps,shape);
             img=imgls{1};
             if imgls{2}~=1 && n(1)==0
                 w=randpair(i,:);
@@ -95,8 +102,6 @@ function imgdata=drawEcoli (img,varargin)
         end
 
 
-
-
     end
     %imagesc(img);
     imgdata=true;
@@ -110,8 +115,14 @@ function imgdata=drawEcoli (img,varargin)
         %Create individual cells in a cell list
         dim={len,height};
         u(len, height)=0;
-        calc2 = abs(round(spherocylinder(len/2, height/2, len/2, height/2, 0, steps)));
-        
+        if strcmpi(shape,'sc')==1 ||strcmpi(shape,'spherocylinder') ==1
+            calc2 = abs(round(spherocylinder(len/2, height/2, len/2, height/2, 0, steps)));
+        elseif strcmpi(shape,'el')==1 ||strcmpi(shape,'ellipse') ==1
+            calc2 = calculateEllipse(len/2, height/2, len/2, height/2, 0, steps);
+        elseif strcmpi(shape,'s')==1 ||strcmpi(shape,'sphere') ==1
+            calc2 = calculateEllipse(len/2, len/2, len/2, len/2, 0, steps);
+        end
+            
         calc2(calc2==0)=1;
         calc2=calc2';
   
@@ -132,19 +143,22 @@ function imgdata=drawEcoli (img,varargin)
     
 
 
-
-
 end
 
 
-
-
-function imgls=draw(img,num,l,h,s)
+function imgls=draw(img,num,l,h,s,shape)
 %%Draws the cells. Takes the image and num, a cell with the coordinate pair 
 %%in the first cell and the angles in the second. If redraw needed, it
 %%returns a 1.
-    calc = spherocylinder(num{1}(1)+1, num{1}(2), l/2, h/2, num{2}, ...
-        s);
+
+    if strcmpi(shape,'sc')==1 ||strcmpi(shape,'spherocylinder') ==1
+        calc = abs(round(num{1}(1)+1, num{1}(2), l/2, h/2, num{2}, ...
+        s));
+    elseif strcmpi(shape,'el')==1 ||strcmpi(shape,'ellipse') ==1
+        calc = calculateEllipse(num{1}(1), num{1}(2), l/2, h/2, num{2}, s);
+    elseif strcmpi(shape,'s')==1 ||strcmpi(shape,'sphere') ==1
+        calc = calculateEllipse(num{1}(1), num{1}(1), l/2, l/2, num{2}, s);
+    end
     calc=round(calc);
     
     bi=img;
@@ -160,14 +174,10 @@ function imgls=draw(img,num,l,h,s)
 end
 
 
-
-
 function img=checkShape(img, pts)
 %%Checks to make sure the cell is not outside the bounds of the img or 
 %%overlapping with another cell. If it is, it returns 0. Takes the image 
 %%and pts, coordinate pairs about the location of the cells
-
-
 
 
     n=0;
@@ -199,14 +209,11 @@ function img=checkShape(img, pts)
         img(A==1) = 1;
 
 
-
-
     end
-
-
 
 
     if n>0 || s>0
         img=0;
     end
 end
+

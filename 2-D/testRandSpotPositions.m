@@ -1,14 +1,18 @@
 function testRandSpotPositions()
+%%Tests the randomness of the x and y values chosen for orgins of molcules.
+%%It requires not inputs and will save data to a file called
+%%'TestRandomOrigins.mat'. It will automatically load data from this file.
+close all;
+clear all;
+ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
+path(ip);
 datapts=50000;
-
-
 
 %Define the height and length of the cells here in nanometers
 h=50; %nm
 l=200; %nm
 bin1=h;
 bin2=l;
-bina=90;
 
 %The number of molecules to measure
 numofmol=1;
@@ -41,51 +45,34 @@ k(imgsize,imgsize) = 0;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-angles=zeros(1,datapts);
+
 molx=zeros(1,datapts);
 moly=zeros(1,datapts);
 
+try
+    load('TestRandomOrigins2-D.mat');
+catch
+    tic
+    for o=1:datapts
+        imgdata=drawEcoli(k,numofcells,l,h,steps,'no');
+        cell=imgdata{5}{1};
+        imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+        p=imgdata{6}{1};
+        molx(o)=p(1);
+        moly(o)=p(2);
+    end
+    toc
 
-tic
-for o=1:datapts    
-    imgdata=drawEcoli(k,numofcells,l,h,steps,'no');
-    cell=imgdata{5}{1};
-    imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
-    p=imgdata{6}{1};
-    molx(o)=p(1);
-    moly(o)=p(2);
-    angles(o)=imgdata{2};
+    save('TestRandomOrigins2-D.mat','molx','moly');
 end
-toc
-
-
-
-save('TestRandomOrigins.mat','molx','moly','angles');
-figure(1);
-[f,x]=hist(angles,bina);
-bar(x,f/datapts)
-hold on;
-expect(1:length(angles))=1/bina;
-expect=[angles; expect];
-plot(expect(1,:),expect(2,:),'color','red')
-hold off;
-title('Distribution of a Large Number of Randomly Chosen Angles',... 
-  'FontWeight','bold')
-xlabel('Angle (degrees)')
-ylabel('Probability')
-saveas(gcf, 'testhistangles.fig')
-
-
-
-
 
 
 expect=[];
-figure(2);
+figure(1);
 [f2,x2]=hist(molx,1:1:bin1);
 bar(x2,f2/trapz(x2,f2))
 hold on;
-molx=sort(molx);
+molx=sort(molx)*10;
 expect(1:datapts)=0;
 for w=1:datapts
     expect(w)=(sum(cell(molx(w),:)/sum(sum(cell))));
@@ -106,11 +93,11 @@ saveas(gcf, 'testhistmolx.fig')
 
 
 expect=[];
-figure(3);
+figure(2);
 [f3,x3]=hist(moly,1:1:bin2);
 bar(x3,f3/trapz(x3,f3))
 hold on;
-moly=sort(moly);
+moly=sort(moly)*10;
 expect(1:datapts,1)=0;
 for w=1:datapts
     expect(w)=(sum(cell(:,moly(w))/sum(sum(cell))));
@@ -121,7 +108,7 @@ plot(expect(1,:),expect(2,:),'color','red')
 hold off;
 title('Distribution of a Large Number of Randomly Chosen Y-values',... 
   'FontWeight','bold')
-xlabel('Y (nm)')
+xlabel('Y (nm), Resolution 10nm/pixel')
 ylabel('Probability')
 saveas(gcf, 'testhistmoly.fig')
 
