@@ -87,7 +87,7 @@ function testIntensity()
                 %             toc
                 datals{z}=imgdata;
             end
-            save('TestIntensity2-D.mat','datals','lsofnumofmol');
+            save('TestIntensity2-D.mat','-v7.3','datals','lsofnumofmol');
         end
         toc
     end

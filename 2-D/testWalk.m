@@ -5,8 +5,7 @@ function testWalk()
     clear all;
     close all;
 
-    ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
-    addpath(ip);
+
     %Define the height and length of the cells here in nanometers
     h=50; %nm
     l=200; %nm
