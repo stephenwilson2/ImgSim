@@ -10,7 +10,7 @@ function testClumping (varargin)
     imgnum=5; % Num of images between the lnum and hnum of mol
         lnum=50;% Lower num of mol
         hnum=200;% High num of mol
-    res=5;
+    res=64;
     
     
     
@@ -37,12 +37,11 @@ function testClumping (varargin)
     de=7*(1-power(cos(a),3/2));
     fluorvar=1/n/k*power(num/de,-0.5);
     
-    % Filename
-    fli=strcat('TestNumofMolClumping_',num2str(res),'nmpp_',shape);
+
 
     % Define the height and length of the cells here in nanometers
     h=500; %nm
-    l=2000; %nm
+    l=10000; %nm
 
         % Sets defaults for optional inputs
         optargs = {shape};
@@ -57,8 +56,10 @@ function testClumping (varargin)
         optargs(1:numvarargs) = varargin;
         shape = cell2mat(optargs(1));
 
-    shape
-
+    
+    % Filename
+    flend=strcat(num2str(res),'_',shape,'long');
+    fli=strcat('TestNumofMolClumping_',flend);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Scaling
@@ -78,7 +79,7 @@ function testClumping (varargin)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     try
-        load(strcat('TestClumping_',num2str(res),'_',shape))
+        load(strcat('TestClumping_',flend))
     catch
         fprintf('%s\n', 'Drawing mask');
         
@@ -147,7 +148,7 @@ function testClumping (varargin)
             end
         end
     end
-    save(strcat('TestClumping_',num2str(res),'_',shape),'alldata');
+    save(strcat('TestClumping_',flend),'alldata');
     figure(100)
     imshow(mat2gray(alldata))
     axis equal;
