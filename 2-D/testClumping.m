@@ -3,7 +3,7 @@ function testClumping (varargin)
     
     % Default values
 
-    shape='sc'; % Shape of cell. Options are:
+    shape='el'; % Shape of cell. Options are:
                 % Ellipse, spherocylinder, and sphere (sphere only works
                 % with one cell right not)
     angle=0; % Force an angle on the cells. 360 if don't force
@@ -31,7 +31,9 @@ function testClumping (varargin)
     num=4-7*power(cos(a),3/2)+3*power(cos(a),7/2);
     de=7*(1-power(cos(a),3/2));
     fluorvar=1/n/k*power(num/de,-0.5);
-
+    
+    % Filename
+    fli=strcat('TestNumofMolClumping_64nmpp_',shape);
 
     % Define the height and length of the cells here in nanometers
     h=500; %nm
@@ -85,7 +87,6 @@ function testClumping (varargin)
             alldata=[];
             for t=1:rep
                 data=[];
-                fli=strcat('TestNumofMolClumping_64nmpp_',shape);
                 
                 for numofmol=lsofnumofmol
                     imgdata=tmpimgdata;
@@ -93,7 +94,7 @@ function testClumping (varargin)
                     %                 fl=strcat(fli,i,'.fig');
                     fprintf('\n%s\n', 'Populating Molecules');
                     tic
-                    imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+                    imgdata=populateMolecules(imgdata,numofmol,sizeofmol,shape);
                     toc
                     
                     figure(548);imagesc(imgdata{5}{1});axis equal;
@@ -148,8 +149,8 @@ function testClumping (varargin)
     l=size(alldata,1);
     for f=1:length(lsofnumofmol)
         s=num2str(lsofnumofmol(f));
-        s=strcat('\color{white}',s,'Molecules');
-        text(l/imgnum*f-l/imgnum,l,s);
+        s=strcat('\color{white}',s,' Molecules');
+        text(l/(imgnum/2)*.9*f-l/(imgnum/2)*.9+5,l,s);
     end
     saveas(gcf, fli)
     

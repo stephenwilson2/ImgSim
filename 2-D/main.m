@@ -4,7 +4,7 @@ close all
 ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
 addpath(ip);
 
-
+shape='b';
 % Default values
 numofcells=1;
 nmperpixel=1;
@@ -16,7 +16,7 @@ l=2000; %nm
 
 
 %The number of molecules to measure
-numofmol=2;
+numofmol=100;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
@@ -61,40 +61,16 @@ k(imgsize,imgsize) = 0;
 fprintf('%s\n', 'Drawing mask');
 tic
 imgdata=drawEcoli(k,numofcells,l,h,steps,'no');
-% %drawEcoli inputs:1)16-bit image matrix
-%                   2)number of cells to try and put in*
-%                   3)height of cell (in px)*
-%                   4)length of cell (in px)*
-%                   5)number of points in shape (keep high ~200 for small 
-%                     cells and ~2000 for large cells)*
-%                   6)use random origins keep blank or fix the origins:
-%                     'fix'*
-%                   * denotes optional input
-%          output: 
-%                   1)the cell mask, 16-bit image matrix
-%                   2)angles of the cells
-%                   3)origins of the cells
-%                   4)dimensions of the cell (in a cell type: len, height)
-%                   5)the cells
+
+figure(4);imagesc(imgdata{1});
+
 toc
 if length(imgdata)>1
     fprintf('\n%s\n', 'Populating Molecules');
     tic
-    imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+    imgdata=populateMolecules(imgdata,numofmol,sizeofmol,shape);
     toc
-    %% Populates cells with molecules of some shape
-    %populateMolecules inputs:  1)imagedata
-    %                           2)copies of molecules*
-    %                           3)size of molecules*
-    %                           * denotes optional input
-    %                  output:
-    %                           1)the cell mask, 16-bit image matrix
-    %                           2)angles of the cells
-    %                           3)origins of the cells
-    %                           4)dimensions of the cell (in a cell type: len, height)
-    %                           5)the molecules channel (in a cell type)
-    %                           6)the origins of the molecules
- 
+  
     %   Shows the cells prior to the PSF
 %     for i=1:length(imgdata{5})
 %         figure(i*1000);imagesc(imgdata{5}{i});
@@ -122,10 +98,10 @@ if length(imgdata)>1
 
 
     fprintf('\n%s\n', 'Graphing');
-    tic
-    graph(imgdata)
-    toc
-    
+%     tic
+%     graph(imgdata)
+%     toc
+%     
     tic
     imgdata=coarsen(imgdata,nmperpixel,64);
     toc

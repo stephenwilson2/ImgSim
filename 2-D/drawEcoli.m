@@ -110,7 +110,7 @@ function imgdata=drawEcoli (img,varargin)
         %Create individual cells in a cell list
         dim={len,height};
         u(len, height)=0;
-        calc2 = abs(round(spherocylinder(len/2, height/2, len/2, height/2, 0, steps)));
+        calc2 = round(spherocylinder(len/2, height/2, len/2, height/2, 0, steps));
         
         calc2(calc2==0)=1;
         calc2=calc2';

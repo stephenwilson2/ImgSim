@@ -25,22 +25,24 @@ function imgdata=populateMolecules(imgdata,varargin)
     %Default values
     num = 5; % copies of molecules
     sz=100;
+    shape='s';
 
 
     
     % Sets defaults for optional inputs
-    optargs = {num,sz};
+    optargs = {num,sz,shape};
     
     % Checks to ensure  3 optional inputs at most
     numvarargs = length(varargin);
-    if numvarargs > 2
-        error('Takes at most 2 optional inputs');
+    if numvarargs > 3
+        error('Takes at most 3 optional inputs');
     end
     
     % Overwrites defaults if optional input exists
     optargs(1:numvarargs) = varargin;
     num = cell2mat(optargs(1));
     sz = cell2mat(optargs(2));
+    shape = cell2mat(optargs(3));
     molori{length(cells)}=[];
 
 
@@ -48,9 +50,11 @@ function imgdata=populateMolecules(imgdata,varargin)
         for n=1:num
             x=randi([1 (len-1)]);
             y=randi([1 (height-1)]);
-            while cells{i}(x,y)==0
-                x=randi([1 (len-1)]);
-                y=randi([1 (height-1)]);
+            if strcmp(shape,'b')==0
+                while cells{i}(x,y)==0
+                    x=randi([1 (len-1)]);
+                    y=randi([1 (height-1)]);
+                end
             end
             xy=[x,y];
             molori{i}=xy;
