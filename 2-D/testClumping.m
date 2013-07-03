@@ -3,13 +3,18 @@ function testClumping (varargin)
     
     % Default values
 
-    shape='el'; % Shape of cell. Options are:
+    shape='sc'; % Shape of cell. Options are:
                 % Ellipse, spherocylinder, and sphere (sphere only works
                 % with one cell right not)
     angle=0; % Force an angle on the cells. 360 if don't force
     imgnum=5; % Num of images between the lnum and hnum of mol
         lnum=50;% Lower num of mol
         hnum=200;% High num of mol
+    res=5;
+    
+    
+    
+    
     numofcells=1;
     nmperpixel=1;
     
@@ -33,7 +38,7 @@ function testClumping (varargin)
     fluorvar=1/n/k*power(num/de,-0.5);
     
     % Filename
-    fli=strcat('TestNumofMolClumping_64nmpp_',shape);
+    fli=strcat('TestNumofMolClumping_',num2str(res),'nmpp_',shape);
 
     % Define the height and length of the cells here in nanometers
     h=500; %nm
@@ -73,7 +78,7 @@ function testClumping (varargin)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     try
-        load(strcat('TestClumping_',shape))
+        load(strcat('TestClumping_',num2str(res),'_',shape))
     catch
         fprintf('%s\n', 'Drawing mask');
         
@@ -117,7 +122,7 @@ function testClumping (varargin)
                     fprintf('\n%s\n', 'Coarsening');
                     
                     tic
-                    imgdata=coarsen(imgdata,nmperpixel,64);
+                    imgdata=coarsen(imgdata,nmperpixel,res);
                     toc
                     
                     tic
@@ -127,22 +132,22 @@ function testClumping (varargin)
                     data=[data imgdata{6}];
                     toc
                 end
-                figure(100)
-                imshow(mat2gray(data))
-                axis equal;
-                l=size(data,1);
-                for f=1:length(lsofnumofmol)
-                    s=num2str(lsofnumofmol(f));
-                    s=strcat('\color{white}',s);
-                    text(l*f-5,l-5,s);
-                end
-                saveas(gcf, strcat(fli,'_',num2str(t)))
+%                 figure(100)
+%                 imshow(mat2gray(data))
+%                 axis equal;
+%                 l=size(data,1);
+%                 for f=1:length(lsofnumofmol)
+%                     s=num2str(lsofnumofmol(f));
+%                     s=strcat('\color{white}',s);
+%                     text(l*f-5,l-5,s);
+%                 end
+%                 saveas(gcf, strcat(fli,'_',num2str(t)))
                 alldata=[alldata;data];
                 
             end
         end
     end
-    save(strcat('TestClumping_',shape),'alldata');
+    save(strcat('TestClumping_',num2str(res),'_',shape),'alldata');
     figure(100)
     imshow(mat2gray(alldata))
     axis equal;

@@ -119,11 +119,15 @@ function imgdata=drawEcoli (img,varargin)
             u(len, height)=0;
             dim={len,height};
             calc2 = abs(round(spherocylinder(len/2, height/2, len/2, height/2, 0, steps)));
+        elseif strcmpi(shape,'b') ||strcmpi(shape,'rectangle') ||strcmpi(shape,'box')||strcmpi(shape,'square')
+            u(len, height)=0;
+            dim={len,height};
+            calc2 = round(calculateEllipse(len/2, height/2, len/2, height/2, 0, steps));
         elseif strcmpi(shape,'el')==1 ||strcmpi(shape,'ellipse') ==1
             u(len, height)=0;
             dim={len,height};
             calc2 = round(calculateEllipse(len/2, height/2, len/2, height/2, 0, steps));
-        elseif strcmpi(shape,'s')==1 ||strcmpi(shape,'sphere') ==1
+        elseif strcmpi(shape,'s')==1 ||strcmpi(shape,'sphere') ==1 ||strcmpi(shape,'c')
             u(height, height)=0;
             dim={height,height};
             calc2 = round(calculateEllipse(height/2, height/2, height/2, height/2, 0, steps));
@@ -160,6 +164,9 @@ function imgls=draw(img,num,l,h,s,shape)
     if strcmpi(shape,'sc')==1 ||strcmpi(shape,'spherocylinder') ==1
         calc = abs(spherocylinder(num{1}(1)+1, num{1}(2), l/2, h/2, num{2}, ...
         s));
+    
+    elseif strcmpi(shape,'b')==1 ||strcmpi(shape,'rectangle') ||strcmpi(shape,'box')||strcmpi(shape,'square')
+        calc = calculateEllipse(num{1}(1), num{1}(2), l/2, h/2, num{2}, s);
     elseif strcmpi(shape,'el')==1 ||strcmpi(shape,'ellipse') ==1
         calc = calculateEllipse(num{1}(1), num{1}(2), l/2, h/2, num{2}, s);
     elseif strcmpi(shape,'s')==1 ||strcmpi(shape,'sphere') ==1

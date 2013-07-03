@@ -50,7 +50,7 @@ function imgdata=populateMolecules(imgdata,varargin)
         for n=1:num
             x=randi([1 (len-1)]);
             y=randi([1 (height-1)]);
-            if strcmp(shape,'b')==0
+            if ~strcmp(shape,'b')
                 while cells{i}(x,y)==0
                     x=randi([1 (len-1)]);
                     y=randi([1 (height-1)]);
@@ -58,8 +58,12 @@ function imgdata=populateMolecules(imgdata,varargin)
             end
             xy=[x,y];
             molori{i}=xy;
-            rna=rnaodna(xy,len,height,sz,cells{i});
-            cells{i}(rna>0)=rna(rna>0);
+            if ~strcmp(shape,'b')
+                rna=rnaodna(xy,len,height,sz,cells{i});
+                cells{i}(rna>0)=rna(rna>0);
+            else
+                cell{i}(x,y)=100;
+            end
         end
         tmp=zeros(size(cells{i}));
         tmp(cells{i}>1)=cells{i}(cells{i}>1)*2;
