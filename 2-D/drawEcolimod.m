@@ -113,14 +113,20 @@ function imgdata=drawEcoli (img,varargin)
     end
     if imgdata~=false
         %Create individual cells in a cell list
-        dim={len,height};
-        u(len, height)=0;
+        
+        
         if strcmpi(shape,'sc')==1 ||strcmpi(shape,'spherocylinder') ==1
+            u(len, height)=0;
+            dim={len,height};
             calc2 = abs(round(spherocylinder(len/2, height/2, len/2, height/2, 0, steps)));
         elseif strcmpi(shape,'el')==1 ||strcmpi(shape,'ellipse') ==1
-            calc2 = calculateEllipse(len/2, height/2, len/2, height/2, 0, steps);
+            u(len, height)=0;
+            dim={len,height};
+            calc2 = round(calculateEllipse(len/2, height/2, len/2, height/2, 0, steps));
         elseif strcmpi(shape,'s')==1 ||strcmpi(shape,'sphere') ==1
-            calc2 = calculateEllipse(len/2, len/2, len/2, len/2, 0, steps);
+            u(height, height)=0;
+            dim={height,height};
+            calc2 = round(calculateEllipse(height/2, height/2, height/2, height/2, 0, steps));
         end
             
         calc2(calc2==0)=1;
@@ -152,12 +158,12 @@ function imgls=draw(img,num,l,h,s,shape)
 %%returns a 1.
 
     if strcmpi(shape,'sc')==1 ||strcmpi(shape,'spherocylinder') ==1
-        calc = abs(round(num{1}(1)+1, num{1}(2), l/2, h/2, num{2}, ...
+        calc = abs(spherocylinder(num{1}(1)+1, num{1}(2), l/2, h/2, num{2}, ...
         s));
     elseif strcmpi(shape,'el')==1 ||strcmpi(shape,'ellipse') ==1
         calc = calculateEllipse(num{1}(1), num{1}(2), l/2, h/2, num{2}, s);
     elseif strcmpi(shape,'s')==1 ||strcmpi(shape,'sphere') ==1
-        calc = calculateEllipse(num{1}(1), num{1}(1), l/2, l/2, num{2}, s);
+        calc = calculateEllipse(num{1}(2), num{1}(2), h/2, h/2, num{2}, s);
     end
     calc=round(calc);
     

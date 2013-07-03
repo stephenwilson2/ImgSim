@@ -16,7 +16,7 @@ l=2000; %nm
 
 
 %The number of molecules to measure
-numofmol=200;
+numofmol=2;
 sizeofmol=1; % This number is represnetative of the nm of molecule 
 % per molecule
 
