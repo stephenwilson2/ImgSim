@@ -3,7 +3,8 @@ function testIntensity()
     clear all
     close all
 
-    imgnum=100;
+    imgnum=50;
+    datapts=3;
     
     % Default values
     numofcells=1;
@@ -62,64 +63,67 @@ function testIntensity()
             fli='TestIntensity_gray_coarsen';
             z=0;
             for numofmol=lsofnumofmol
-                z=z+1;
-                z
-                imgdata=tmpimgdata;
-                i=num2str(numofmol);
-                cellnum=num2str(z);
-                
-                fl=strcat(fli,cellnum,'_',i,'.fig');
-                
-                imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
-                %  wopsf=imgdata{5};
-                imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
-                
-                imgdata{6}=psf(imgdata{6},fluorvar);
-                
-                imgdata=coarsen(imgdata,nmperpixel,64);
-                %             figure(z);
-                %             imagesc(imgdata{5}{1});
-                %             axis equal;
-                %             tic
-                %             graph(imgdata)
-                %             saveas(gcf, fl)
-                %             close all;
-                %             toc
-                datals{z}=imgdata;
+                for n=1:datapts
+                    z=z+1;
+                    z
+                    imgdata=tmpimgdata;
+                    i=num2str(numofmol);
+                    cellnum=num2str(z);
+                    
+                    imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
+
+                    imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
+                    
+                    imgdata{6}=psf(imgdata{6},fluorvar);
+                    
+                    imgdata=coarsen(imgdata,nmperpixel,64);
+                    
+                    datals{z}=imgdata;
+                end
             end
-            save('TestIntensity2-D.mat','-v7.3','datals','lsofnumofmol');
+            save('TestIntensity2-D.mat','-v7.3','datals','lsofnumofmol','datapts');
         end
         toc
     end
-    analyze(datals,lsofnumofmol);
+    analyze(datals,datapts);
     
 end
 
-function analyze(data,lsnum)
-    pairpsf(length(data),2)=0;
-    for i=1:length(data)
-        V=var(data{i}{6}(:));
-        n=mean(data{i}{6}(:));
-        pairpsf(i,1)=n;
-        pairpsf(i,2)=V;
+function analyze(data,pts)
+    pairpsf(length(data),3)=0;
+    for i=1:length(data)/pts
+        V(pts)=0;
+        n(pts)=0;
+        for o=1:pts
+            V(o)=var(data{i+o}{6}(:));
+            n(o)=mean(data{i+o}{6}(:));
+        end
+        pairpsf(i,1)=mean(n);
+        pairpsf(i,2)=mean(V);
+        pairpsf(i,3)=std(V);
     end
-    pairwopsf(length(data),2)=0;
+    pairwopsf(length(data),3)=0;
     for i=1:length(data)
-        V=var(data{i}{5}{1}(:));
-        n=mean(data{i}{6}(:));
-        pairwopsf(i,1)=n;
-        pairwopsf(i,2)=V;
+        V(pts)=0;
+        n(pts)=0;
+        for o=1:pts
+            V(o)=var(data{i+o}{5}{1}(:));
+            n(o)=mean(data{i+o}{6}(:));
+        end
+        pairwopsf(i,1)=mean(n);
+        pairwopsf(i,2)=mean(V);
+        pairwopsf(i,3)=std(V);
     end
     
     %with PSF    
     figure(74);
     subplot(1,2,1);
-    [p,s]=polyfit(pairpsf(:,1), pairpsf(:,3),1);
-    y=pairpsf(:,3);
+    [p,s]=polyfit(pairpsf(:,1), pairpsf(:,2),1);
+    y=pairpsf(:,2);
     yfit = polyval(p,pairpsf(:,1));
-    R2psf = corrcoef(pairpsf(:,3), yfit);    
+    R2psf = corrcoef(pairpsf(:,2), yfit);    
     hold all;
-    plot(pairpsf(:,1),pairpsf(:,3),'color','blue');
+    errorbar(pairpsf(:,1),pairpsf(:,2),pairpsf(:,3),'ob');
     plot(pairpsf(:,1),yfit,'color', 'red');
     hold off;
     title('Variance compared to number of molecules',...
@@ -133,12 +137,12 @@ function analyze(data,lsnum)
 
     %without PSF
     subplot(1,2,2);
-    [p,s]=polyfit(pairwopsf(:,1), pairwopsf(:,3),1);
-    y=pairwopsf(:,3);
+    [p,s]=polyfit(pairwopsf(:,1), pairwopsf(:,2),1);
+    y=pairwopsf(:,2);
     yfit = polyval(p,pairwopsf(:,1));
-    R2wopsf = corrcoef(pairwopsf(:,3), yfit);
+    R2wopsf = corrcoef(pairwopsf(:,2), yfit);
     hold all;
-    plot(pairwopsf(:,1),pairwopsf(:,3),'color','blue');
+    errorbar(pairwopsf(:,1),pairwopsf(:,2),pairwopsf(:,3),'ob');
     plot(pairwopsf(:,1),yfit,'color', 'red');
     hold off;
     title('Variance compared to number of molecules',...

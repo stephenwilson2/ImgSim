@@ -62,7 +62,7 @@ catch
     end
     toc
 
-    save('TestRandomOrigins2-D.mat','molx','moly','cells');
+    save('TestRandomOrigins2-D.mat','-v7.3','molx','moly','cells');
 end
 
 
@@ -83,7 +83,7 @@ plot(expect(1,:),expect(2,:),'color','red')
 hold off;
 title('Distribution of a Large Number of Randomly Chosen X-values',... 
   'FontWeight','bold')
-xlabel('X (nm)')
+xlabel('X (nm), Resolution 10nm/pixel')
 ylabel('Probability')
 saveas(gcf, 'testhistmolx.fig')
 

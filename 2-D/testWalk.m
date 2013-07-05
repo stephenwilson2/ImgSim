@@ -12,8 +12,8 @@ function testWalk()
     numofcells=1;
     %The number of molecules to measure
     
-    datapts=200;
-    numofRgs=50;
+    datapts=2000;
+    numofRgs=100;
     
     numofmol=1;
     L=linspace(10,300,numofRgs); % This number is contour length in nm
