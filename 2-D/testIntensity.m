@@ -59,7 +59,7 @@ function testIntensity()
         tmpimgdata=imgdata;
         if length(imgdata)>1
             
-            datals=cell(imgnum);
+            datals=cell(imgnum,1);
             fli='TestIntensity_gray_coarsen';
             z=0;
             for numofmol=lsofnumofmol
@@ -67,9 +67,7 @@ function testIntensity()
                     z=z+1;
                     z
                     imgdata=tmpimgdata;
-                    i=num2str(numofmol);
-                    cellnum=num2str(z);
-                    
+
                     imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
 
                     imgdata=ovlay(imgdata,imgdata{1},imgdata{5});
@@ -100,7 +98,7 @@ function analyze(data,pts)
         end
         pairpsf(i,1)=mean(n);
         pairpsf(i,2)=mean(V);
-        pairpsf(i,3)=std(V);
+        pairpsf(i,3)=std(V)/pts^0.5;
     end
     pairwopsf(length(data),3)=0;
     for i=1:length(data)
@@ -112,7 +110,7 @@ function analyze(data,pts)
         end
         pairwopsf(i,1)=mean(n);
         pairwopsf(i,2)=mean(V);
-        pairwopsf(i,3)=std(V);
+        pairwopsf(i,3)=std(V)/pts^0.5;
     end
     
     %with PSF    

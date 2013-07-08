@@ -4,7 +4,6 @@ close all
 ip = 'C:/Users/sw5/ImgSim/2-D'; % make less specific later
 addpath(ip);
 
-shape='b';
 % Default values
 numofcells=1;
 nmperpixel=1;
@@ -62,20 +61,20 @@ fprintf('%s\n', 'Drawing mask');
 tic
 imgdata=drawEcoli(k,numofcells,l,h,steps,'no');
 
-figure(4);imagesc(imgdata{1});
+% figure(4);imagesc(imgdata{1});
 
 toc
 if length(imgdata)>1
     fprintf('\n%s\n', 'Populating Molecules');
     tic
-    imgdata=populateMolecules(imgdata,numofmol,sizeofmol,shape);
+    imgdata=populateMolecules(imgdata,numofmol,sizeofmol);
     toc
   
-    %   Shows the cells prior to the PSF
-%     for i=1:length(imgdata{5})
-%         figure(i*1000);imagesc(imgdata{5}{i});
-%         axis equal;
-%     end 
+%      Shows the cells prior to the PSF
+    for i=1:length(imgdata{5})
+        figure(i*1000);imagesc(imgdata{5}{i});
+        axis equal;
+    end 
 
 
     fprintf('\n%s\n', 'Overlaying Molecules with mask');

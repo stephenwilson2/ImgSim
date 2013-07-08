@@ -12,12 +12,12 @@ e=0;
 %     testRandSpotPositions()
 % catch
 %     e=e+1;
+% % end
+% try
+%     testIntensity()
+% catch
+%     e=e+1;
 % end
-try
-    testIntensity()
-catch
-    e=e+1;
-end
 
 try
     testClumping()

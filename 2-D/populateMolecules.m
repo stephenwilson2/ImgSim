@@ -30,19 +30,19 @@ function imgdata=populateMolecules(imgdata,varargin)
 
     
     % Sets defaults for optional inputs
-    optargs = {num,sz,shape};
+    optargs = {num,sz};
     
-    % Checks to ensure  3 optional inputs at most
+    % Checks to ensure  2 optional inputs at most
     numvarargs = length(varargin);
-    if numvarargs > 3
-        error('Takes at most 3 optional inputs');
+    if numvarargs > 2
+        error('Takes at most 2 optional inputs');
     end
     
     % Overwrites defaults if optional input exists
     optargs(1:numvarargs) = varargin;
     num = cell2mat(optargs(1));
     sz = cell2mat(optargs(2));
-    shape = cell2mat(optargs(3));
+    
     molori{length(cells)}=[];
 
 
@@ -50,20 +50,18 @@ function imgdata=populateMolecules(imgdata,varargin)
         for n=1:num
             x=randi([1 (len-1)]);
             y=randi([1 (height-1)]);
-            if ~strcmp(shape,'b')
-                while cells{i}(x,y)==0
-                    x=randi([1 (len-1)]);
-                    y=randi([1 (height-1)]);
-                end
+            
+            while cells{i}(x,y)==0
+                x=randi([1 (len-1)]);
+                y=randi([1 (height-1)]);
             end
+
             xy=[x,y];
             molori{i}=xy;
-            if ~strcmp(shape,'b')
-                rna=rnaodna(xy,len,height,sz,cells{i});
-                cells{i}(rna>0)=rna(rna>0);
-            else
-                cell{i}(x,y)=100;
-            end
+
+            rna=rnaodna(xy,len,height,sz,cells{i});
+            cells{i}(rna>0)=rna(rna>0);
+
         end
         tmp=zeros(size(cells{i}));
         tmp(cells{i}>1)=cells{i}(cells{i}>1)*2;

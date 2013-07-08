@@ -91,6 +91,7 @@ function testClumping (varargin)
         tmpimgdata=imgdata;
         if length(imgdata)>1
             alldata=[];
+            cells{rep}=0;
             for t=1:rep
                 data=[];
                 
@@ -144,20 +145,34 @@ function testClumping (varargin)
 %                 end
 %                 saveas(gcf, strcat(fli,'_',num2str(t)))
                 alldata=[alldata;data];
+                cells{t}=data;
                 
             end
         end
+        save(strcat('TestClumping_',flend),'alldata','cells');
     end
-    save(strcat('TestClumping_',flend),'alldata');
     figure(100)
-    imshow(mat2gray(alldata))
-    axis equal;
-    l=size(alldata,1);
-    for f=1:length(lsofnumofmol)
-        s=num2str(lsofnumofmol(f));
+    
+    
+
+    l=size(alldata,1)/rep;
+    
+    for k=1:rep*imgnum
+        subplot(rep,imgnum,k)
+        x=l*(mod(k-1,rep)+1);
+        y=l*(mod(k-1,imgnum)+1);
+        imshow(alldata(x-l+1:x,y-l+1:y),...
+            [min(min(alldata)) max(max(alldata))]);axis tight; axis off;
+        s=num2str(lsofnumofmol(mod(k-1,5)+1));
         s=strcat('\color{white}',s,' Molecules');
-        text(l/(imgnum/2)*.9*f-l/(imgnum/2)*.9+5,l,s);
+        text(l/(imgnum/2)*.9-l/(imgnum/2)*.9+5,l-l/10,s);
     end
+
+    
+    
+    
+        
+ 
     saveas(gcf, fli)
     
 end

@@ -63,12 +63,12 @@ function final=accu(img,factor)
     if w>factor
         wp=ceil(w/factor);
     else
-        'too big a factor for w'
+        'too big a coarsening factor for width of image'
     end
     if h>factor
         hp=ceil(h/factor);
     else
-        'too big a factor for h'
+        'too big a coarsening factor for height of image'
     end
     y=zeros(factor,factor);
     x{wp,hp}=[];

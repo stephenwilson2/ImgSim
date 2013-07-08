@@ -146,7 +146,7 @@ function imgls=draw(img,num,l,h,s)
     calc = spherocylinder(num{1}(1)+1, num{1}(2), l/2, h/2, num{2}, ...
         s);
     calc=round(calc);
-    
+%     figure(432);plot(calc(1),calc(2));
     bi=img;
     redo=0;
     img=checkShape(img,calc);
@@ -166,10 +166,6 @@ function img=checkShape(img, pts)
 %%Checks to make sure the cell is not outside the bounds of the img or 
 %%overlapping with another cell. If it is, it returns 0. Takes the image 
 %%and pts, coordinate pairs about the location of the cells
-
-
-
-
     n=0;
     t=size(img);
     imsize=t(1);
