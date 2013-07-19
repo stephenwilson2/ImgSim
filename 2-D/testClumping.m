@@ -158,9 +158,12 @@ function testClumping (varargin)
     l=size(alldata,1)/rep;
     
     for k=1:rep*imgnum
-        subplot(rep,imgnum,k)
         x=l*(mod(k-1,rep)+1);
         y=l*(mod(k-1,imgnum)+1);
+        sz=size(alldata);
+
+        subplot(rep,imgnum,k);
+
         imshow(alldata(x-l+1:x,y-l+1:y),...
             [min(min(alldata)) max(max(alldata))]);axis tight; axis off;
         s=num2str(lsofnumofmol(mod(k-1,5)+1));
